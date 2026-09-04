@@ -1,0 +1,409 @@
+<title>Grace Qiu Lo</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { scroll-behavior: smooth; }
+
+  :root {
+    --bg: oklch(0.17 0.015 50);
+    --bg-soft: oklch(0.205 0.018 50);
+    --card: oklch(0.225 0.02 55);
+    --fg: oklch(0.95 0.012 90);
+    --fg-dim: oklch(0.7 0.02 70);
+    --fg-faint: oklch(0.5 0.015 65);
+    --line: oklch(1 0 0 / 10%);
+    --line-strong: oklch(1 0 0 / 20%);
+    --accent: oklch(0.78 0.13 65);
+    --accent2: oklch(0.78 0.1 195);
+    --accent-ink: oklch(0.16 0.01 50);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--fg); text-decoration: none; }
+  a:hover { color: var(--accent); }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .serif { font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 400; }
+  .mono { font-family: 'Space Mono', 'Courier New', monospace; }
+  .eyebrow {
+    font-family: 'Space Mono', 'Courier New', monospace;
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--fg-dim); display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
+
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    opacity: 0.045; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .section { position: relative; padding: clamp(64px, 9vw, 120px) clamp(24px, 6vw, 88px); border-top: 1px solid var(--line); overflow: hidden; }
+  .section-head { display: flex; flex-direction: column; gap: 18px; margin-bottom: 56px; max-width: 1180px; margin-left: auto; margin-right: auto; }
+  .section-title { font-size: clamp(30px, 4vw, 48px); margin: 0; text-wrap: balance; }
+  .num-bg {
+    position: absolute; top: -0.1em; right: clamp(12px, 4vw, 60px);
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: clamp(90px, 13vw, 190px); color: transparent;
+    -webkit-text-stroke: 1px var(--line-strong); line-height: 1;
+    pointer-events: none; user-select: none; z-index: 0;
+  }
+  .section > * { position: relative; z-index: 1; }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px clamp(24px, 6vw, 88px);
+    backdrop-filter: blur(14px);
+    background: color-mix(in oklch, var(--bg) 78%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 0.04em; font-size: 14px; }
+  .brand svg { flex: none; color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 34px; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .nav-links a { color: var(--fg-dim); }
+  .nav-cta {
+    border: 1px solid var(--line-strong); border-radius: 999px; padding: 8px 18px; font-size: 12px;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg) !important;
+    transition: border-color .2s, color .2s;
+  }
+  .nav-cta:hover { border-color: var(--accent); color: var(--accent) !important; }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* HERO */
+  .hero { position: relative; padding: clamp(64px, 12vw, 140px) clamp(24px, 6vw, 88px) clamp(56px, 8vw, 96px); overflow: hidden; }
+  .hero-glow {
+    position: absolute; inset: -15% -10% auto -10%; height: 560px; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(closest-side, color-mix(in oklch, var(--accent) 20%, transparent), transparent 70%) 18% 30% / 55% 100% no-repeat,
+      radial-gradient(closest-side, color-mix(in oklch, var(--accent2) 14%, transparent), transparent 70%) 85% 10% / 50% 90% no-repeat;
+    filter: blur(10px);
+  }
+  .corner { position: absolute; width: 24px; height: 24px; border-color: var(--line-strong); z-index: 2; }
+  .corner.tl { top: 20px; left: 20px; border-top: 1px solid; border-left: 1px solid; }
+  .corner.tr { top: 20px; right: 20px; border-top: 1px solid; border-right: 1px solid; }
+  .corner.bl { bottom: 20px; left: 20px; border-bottom: 1px solid; border-left: 1px solid; }
+  .corner.br { bottom: 20px; right: 20px; border-bottom: 1px solid; border-right: 1px solid; }
+  .hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; }
+  .hero-name { font-size: clamp(46px, 9.5vw, 122px); line-height: 0.98; margin: 22px 0 6px; text-wrap: balance; }
+  .hero-role {
+    font-family: 'Manrope', sans-serif; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: clamp(14px, 2.2vw, 19px); color: var(--fg-dim); margin: 0 0 28px;
+  }
+  .hero-tagline { font-size: clamp(16px, 2vw, 19px); line-height: 1.6; color: var(--fg-dim); max-width: 640px; margin: 0 0 40px; }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 56px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 26px; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: 0.03em; }
+  .btn-primary { background: var(--accent); color: var(--accent-ink) !important; }
+  .btn-primary:hover { background: color-mix(in oklch, var(--accent) 85%, white); color: var(--accent-ink) !important; }
+  .btn-ghost { border: 1px solid var(--line-strong); color: var(--fg) !important; }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent) !important; }
+  .contact-row { display: flex; flex-wrap: wrap; gap: 10px 28px; font-family: 'Space Mono', monospace; font-size: 13px; color: var(--fg-dim); border-top: 1px solid var(--line); padding-top: 24px; }
+  .contact-row a { color: var(--fg-dim); }
+
+  /* PROFILE */
+  .profile-grid { display: grid; grid-template-columns: 220px 1fr; gap: 48px; max-width: 1180px; margin: 0 auto; }
+  .profile-text { font-size: clamp(18px, 2.2vw, 22px); line-height: 1.65; color: var(--fg); max-width: 680px; text-wrap: pretty; }
+  .profile-text + .profile-text { margin-top: 20px; color: var(--fg-dim); font-size: 17px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 40px; margin-top: 48px; }
+  .stat b { display: block; font-family: 'Instrument Serif', serif; font-style: italic; font-size: 44px; color: var(--accent); line-height: 1; }
+  .stat span { display: block; margin-top: 8px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-faint); }
+  @media (max-width: 720px) { .profile-grid { grid-template-columns: 1fr; gap: 20px; } }
+
+  /* EXPERIENCE */
+  .role-list { display: flex; flex-direction: column; max-width: 1180px; margin: 0 auto; }
+  .role { display: grid; grid-template-columns: 170px 1fr; gap: 32px; padding: 36px 0; border-top: 1px solid var(--line); }
+  .role:first-child { border-top: none; padding-top: 0; }
+  .role-date { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.05em; color: var(--fg-faint); padding-top: 6px; }
+  .role-title { font-size: 23px; margin: 0 0 2px; }
+  .role-org { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 20px; color: var(--accent); margin: 0 0 18px; }
+  .role-bullets { margin: 0 0 22px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; max-width: 640px; }
+  .role-bullets li { position: relative; padding-left: 20px; color: var(--fg-dim); font-size: 15px; line-height: 1.55; }
+  .role-bullets li::before { content: ""; position: absolute; left: 0; top: 9px; width: 8px; height: 1px; background: var(--line-strong); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-family: 'Space Mono', monospace; font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--fg-dim); }
+  @media (max-width: 640px) { .role { grid-template-columns: 1fr; gap: 10px; } }
+
+  /* SKILLS */
+  .skills-wrap { max-width: 1180px; margin: 0 auto; }
+  .skill-block + .skill-block { margin-top: 44px; }
+  .skill-label { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-faint); margin: 0 0 18px; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); font-size: 15px; font-weight: 500; }
+  .pill .lvl { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--fg-faint); }
+
+  /* EDUCATION */
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1180px; margin: 0 auto; }
+  .edu-card { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 32px; }
+  .edu-card .edu-date { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 14px; display: block; }
+  .edu-card h3 { font-size: 21px; margin: 0 0 6px; }
+  .edu-card p { margin: 0; color: var(--fg-dim); font-size: 14px; line-height: 1.5; }
+  @media (max-width: 720px) { .edu-grid { grid-template-columns: 1fr; } }
+
+  /* FOOTER */
+  .footer { padding: clamp(64px, 10vw, 120px) clamp(24px, 6vw, 88px) 40px; border-top: 1px solid var(--line); position: relative; overflow: hidden; }
+  .footer-inner { max-width: 1180px; margin: 0 auto; position: relative; z-index: 1; }
+  .footer-title { font-size: clamp(32px, 6vw, 62px); max-width: 780px; margin: 0 0 44px; text-wrap: balance; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 16px 40px; margin-bottom: 64px; }
+  .footer-link .lbl { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--fg-faint); letter-spacing: 0.06em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .footer-link a { font-size: 17px; }
+  .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 28px; border-top: 1px solid var(--line); font-family: 'Space Mono', monospace; font-size: 12px; color: var(--fg-faint); }
+  .footer-bottom a { color: var(--fg-faint); }
+
+  @media (prefers-reduced-motion: reduce) { body { scroll-behavior: auto; } }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap">
+
+<div class="grain"></div>
+
+<nav class="nav">
+  <div class="brand">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M9.5 8.2 16 12l-6.5 3.8V8.2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+    </svg>
+    <span>GRACE QIU LO</span>
+  </div>
+  <div class="nav-links">
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+  </div>
+  <a class="nav-cta" href="#contact">Contact</a>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-glow"></div>
+  <span class="corner tl"></span><span class="corner tr"></span>
+  <span class="corner bl"></span><span class="corner br"></span>
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="dot"></span>PORTFOLIO — 3D CHARACTER ANIMATION</div>
+    <h1 class="serif hero-name">Grace Qiu Lo</h1>
+    <p class="hero-role">3D Character &amp; Creature Animator</p>
+    <p class="hero-tagline">Character animator with production experience across feature films, episodic animation, game cinematics and commercial content — full shot ownership from blocking to final polish, with a strong focus on performance-driven acting.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#experience">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7Z" fill="currentColor"/></svg>
+        View Experience
+      </a>
+      <a class="btn btn-ghost" href="mailto:graceqiulo2@gmail.com">Get in Touch</a>
+    </div>
+    <div class="contact-row">
+      <a href="mailto:graceqiulo2@gmail.com">graceqiulo2@gmail.com</a>
+      <a href="tel:+34688196477">+34 688 196 477</a>
+      <a href="https://linkedin.com/in/grace-qiu-lo/">linkedin.com/in/grace-qiu-lo</a>
+      <span>Barcelona, Spain</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="section" id="profile">
+    <span class="num-bg">01</span>
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span>01 — Profile</div>
+      <h2 class="serif section-title">Performance first,<br>craft always.</h2>
+    </div>
+    <div class="profile-grid">
+      <div class="mono" style="font-size:13px; color:var(--fg-faint); letter-spacing:.04em; line-height:1.7; padding-top:6px;">
+        FEATURE FILM<br>EPISODIC TV<br>GAME CINEMATICS<br>COMMERCIAL<br>AR / REAL-TIME
+      </div>
+      <div>
+        <p class="profile-text">Character animator with production experience across feature films, episodic animation, game cinematics, and commercial content. Strong focus on performance-driven animation, shot ownership from blocking to polish, and high-quality character acting.</p>
+        <p class="profile-text">Experienced in keyframe animation and mocap cleanup workflows within fast-paced international production pipelines — with strong adaptability to different studio standards and workflows.</p>
+        <div class="stat-row">
+          <div class="stat"><b>16</b><span>Productions Shipped</span></div>
+          <div class="stat"><b>5</b><span>Studios &amp; Teams</span></div>
+          <div class="stat"><b>2022</b><span>Working Since — Present</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="experience">
+    <span class="num-bg">02</span>
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span>02 — Experience</div>
+      <h2 class="serif section-title">Studio credits.</h2>
+    </div>
+    <div class="role-list">
+
+      <div class="role">
+        <div class="role-date">JUL 2023<br>— PRESENT</div>
+        <div>
+          <h3 class="role-title">3D Animator</h3>
+          <p class="role-org">Asymmetric VFX Studio</p>
+          <ul class="role-bullets">
+            <li>Full shot ownership: blocking, spline, polish, final delivery</li>
+            <li>Character performance animation with strong acting focus</li>
+            <li>Collaboration with layout, lighting and CFX departments</li>
+            <li>Work closely with directors, contributing creative ideas that enhance storytelling</li>
+            <li>Consistent delivery under production deadlines in episodic pipelines</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Little Brownie Kuzya 1 &amp; 2</span>
+            <span class="chip">Prostokvashino 1 &amp; 2</span>
+            <span class="chip">The Tale of Tsar Saltan</span>
+            <span class="chip">Manyunya (TV Series)</span>
+            <span class="chip">Pinocchio and the Water of Life</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-date">MAY 2024<br>— SEP 2024</div>
+        <div>
+          <h3 class="role-title">3D Animator / Layout Artist</h3>
+          <p class="role-org">Gizmo Animation Studio</p>
+          <ul class="role-bullets">
+            <li>Cinematic layout: camera staging, composition, shot design</li>
+            <li>Character animation for narrative-driven trailers</li>
+            <li>Visual storytelling aligned with IP and marketing direction</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Monopoly Game Trailer</span>
+            <span class="chip">Harry Potter: Hogwarts Mystery</span>
+            <span class="chip">Netflix K-pop Demon Hunters</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-date">JUL 2025<br>— SEP 2025</div>
+        <div>
+          <h3 class="role-title">3D Animator · Freelance</h3>
+          <p class="role-org">Tucan Studio</p>
+          <ul class="role-bullets">
+            <li>High-end commercial animation with feature-film quality standards</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Ueno Bank</span>
+            <span class="chip">Don Vito Albirroja</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-date">APR 2022<br>— NOV 2022</div>
+        <div>
+          <h3 class="role-title">3D Animator</h3>
+          <p class="role-org">3DAR</p>
+          <ul class="role-bullets">
+            <li>Facial motion capture cleanup for Meta Horizon — top correction efficiency</li>
+            <li>Keyframe animation for AR filters and interactive experiences</li>
+            <li>Hybrid animation for live-action + CGI integration</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Addicted (Music Video)</span>
+            <span class="chip">Meta Horizon</span>
+            <span class="chip">Slumberland — Netflix IG Filter</span>
+            <span class="chip">Unconditional Friends — Snapchat AR</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-date">MAR 2024</div>
+        <div>
+          <h3 class="role-title">Animation Instructor</h3>
+          <p class="role-org">ESCAC</p>
+          <ul class="role-bullets">
+            <li>Designed animation curriculum for the VFX Master's program</li>
+            <li>Mentored students in body mechanics, acting and shot development</li>
+            <li>Provided professional feedback for demo reel improvement</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <span class="num-bg">03</span>
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span>03 — Toolkit</div>
+      <h2 class="serif section-title">Software &amp; languages.</h2>
+    </div>
+    <div class="skills-wrap">
+      <div class="skill-block">
+        <p class="skill-label">Software</p>
+        <div class="pill-row">
+          <span class="pill">Maya</span>
+          <span class="pill">Unreal Engine</span>
+          <span class="pill">ShotGrid</span>
+          <span class="pill">Nuke</span>
+          <span class="pill">ZBrush</span>
+          <span class="pill">Blender</span>
+          <span class="pill">Substance 3D</span>
+          <span class="pill">Photoshop</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <p class="skill-label">Languages</p>
+        <div class="pill-row">
+          <span class="pill">Spanish <span class="lvl">NATIVE</span></span>
+          <span class="pill">Chinese Mandarin <span class="lvl">NATIVE</span></span>
+          <span class="pill">Cantonese <span class="lvl">NATIVE</span></span>
+          <span class="pill">Catalan <span class="lvl">NATIVE</span></span>
+          <span class="pill">English <span class="lvl">C1</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="education">
+    <span class="num-bg">04</span>
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span>04 — Education</div>
+      <h2 class="serif section-title">Training &amp; mentorship.</h2>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <span class="edu-date">2019 — 2023</span>
+        <h3>FX Animation — Barcelona Film School</h3>
+        <p>Specialization: Character &amp; Creature Animation</p>
+      </div>
+      <div class="edu-card">
+        <span class="edu-date">2024</span>
+        <h3>The Animation Box</h3>
+        <p>Mentorship with Yury Lementy</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" id="contact">
+  <span class="num-bg">05</span>
+  <div class="footer-inner">
+    <div class="eyebrow" style="margin-bottom:22px;"><span class="dot"></span>05 — Contact</div>
+    <h2 class="serif footer-title">Let's bring your next character to life.</h2>
+    <div class="footer-links">
+      <div class="footer-link">
+        <span class="lbl">Email</span>
+        <a href="mailto:graceqiulo2@gmail.com">graceqiulo2@gmail.com</a>
+      </div>
+      <div class="footer-link">
+        <span class="lbl">Phone</span>
+        <a href="tel:+34688196477">+34 688 196 477</a>
+      </div>
+      <div class="footer-link">
+        <span class="lbl">LinkedIn</span>
+        <a href="https://linkedin.com/in/grace-qiu-lo/">linkedin.com/in/grace-qiu-lo</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Grace Qiu Lo — 3D Character &amp; Creature Animator</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </div>
+</footer>
