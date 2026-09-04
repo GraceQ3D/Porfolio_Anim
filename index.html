@@ -93,8 +93,9 @@
   .corner.tr { top: 20px; right: 20px; border-top: 1px solid; border-right: 1px solid; }
   .corner.bl { bottom: 20px; left: 20px; border-bottom: 1px solid; border-left: 1px solid; }
   .corner.br { bottom: 20px; right: 20px; border-bottom: 1px solid; border-right: 1px solid; }
-  .hero-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; }
-  .hero-name { font-size: clamp(46px, 9.5vw, 122px); line-height: 0.98; margin: 22px 0 6px; text-wrap: balance; }
+  .hero-inner { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .hero-name { font-size: clamp(42px, 7vw, 96px); line-height: 0.98; margin: 22px 0 6px; text-wrap: balance; }
   .hero-role {
     font-family: 'Manrope', sans-serif; font-weight: 800; text-transform: uppercase;
     letter-spacing: 0.05em; font-size: clamp(14px, 2.2vw, 19px); color: var(--fg-dim); margin: 0 0 28px;
@@ -108,6 +109,48 @@
   .btn-ghost:hover { border-color: var(--accent); color: var(--accent) !important; }
   .contact-row { display: flex; flex-wrap: wrap; gap: 10px 28px; font-family: 'Space Mono', monospace; font-size: 13px; color: var(--fg-dim); border-top: 1px solid var(--line); padding-top: 24px; }
   .contact-row a { color: var(--fg-dim); }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  /* REEL */
+  .reel-frame {
+    position: relative; border-radius: 18px; overflow: hidden; cursor: pointer;
+    aspect-ratio: 4 / 5; background: var(--bg-soft); border: 1px solid var(--line-strong);
+    box-shadow: 0 30px 80px -30px oklch(0 0 0 / 55%);
+  }
+  .reel-frame:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .reel-video { width: 100%; height: 100%; object-fit: cover; display: block; background: var(--bg-soft); }
+  .reel-overlay {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+    background: linear-gradient(180deg, oklch(0.1 0.01 50 / 10%) 0%, oklch(0.1 0.01 50 / 60%) 100%);
+    transition: background .25s;
+  }
+  .reel-frame:hover .reel-overlay { background: linear-gradient(180deg, oklch(0.1 0.01 50 / 20%) 0%, oklch(0.1 0.01 50 / 68%) 100%); }
+  .reel-play {
+    width: 68px; height: 68px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: color-mix(in oklch, var(--bg) 55%, transparent); border: 1px solid var(--line-strong);
+    backdrop-filter: blur(6px); transition: transform .2s, border-color .2s; color: var(--fg);
+  }
+  .reel-frame:hover .reel-play { transform: scale(1.08); border-color: var(--accent); color: var(--accent); }
+  .reel-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: var(--fg-dim); text-transform: uppercase; }
+  .reel-corner { position: absolute; width: 18px; height: 18px; border-color: color-mix(in oklch, var(--fg) 55%, transparent); z-index: 2; }
+  .reel-corner.tl { top: 14px; left: 14px; border-top: 1px solid; border-left: 1px solid; }
+  .reel-corner.tr { top: 14px; right: 14px; border-top: 1px solid; border-right: 1px solid; }
+  .reel-corner.bl { bottom: 14px; left: 14px; border-bottom: 1px solid; border-left: 1px solid; }
+  .reel-corner.br { bottom: 14px; right: 14px; border-bottom: 1px solid; border-right: 1px solid; }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+    background: oklch(0.05 0.005 50 / 90%); opacity: 0; pointer-events: none; transition: opacity .25s; padding: 6vh 4vw;
+  }
+  .lightbox.is-open { opacity: 1; pointer-events: auto; }
+  .lightbox-video { max-width: 100%; max-height: 88vh; border-radius: 10px; box-shadow: 0 40px 100px -20px oklch(0 0 0 / 70%); }
+  .lightbox-close {
+    position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+    border: 1px solid var(--line-strong); background: color-mix(in oklch, var(--bg) 70%, transparent); color: var(--fg);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .lightbox-close:hover { border-color: var(--accent); color: var(--accent); }
 
   /* PROFILE */
   .profile-grid { display: grid; grid-template-columns: 220px 1fr; gap: 48px; max-width: 1180px; margin: 0 auto; }
@@ -185,22 +228,37 @@
   <span class="corner tl"></span><span class="corner tr"></span>
   <span class="corner bl"></span><span class="corner br"></span>
   <div class="hero-inner">
-    <div class="eyebrow"><span class="dot"></span>PORTFOLIO — 3D CHARACTER ANIMATION</div>
-    <h1 class="serif hero-name">Grace Qiu Lo</h1>
-    <p class="hero-role">3D Character &amp; Creature Animator</p>
-    <p class="hero-tagline">Character animator with production experience across feature films, episodic animation, game cinematics and commercial content — full shot ownership from blocking to final polish, with a strong focus on performance-driven acting.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#experience">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7Z" fill="currentColor"/></svg>
-        View Experience
-      </a>
-      <a class="btn btn-ghost" href="mailto:graceqiulo2@gmail.com">Get in Touch</a>
-    </div>
-    <div class="contact-row">
-      <a href="mailto:graceqiulo2@gmail.com">graceqiulo2@gmail.com</a>
-      <a href="tel:+34688196477">+34 688 196 477</a>
-      <a href="https://linkedin.com/in/grace-qiu-lo/">linkedin.com/in/grace-qiu-lo</a>
-      <span>Barcelona, Spain</span>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="dot"></span>PORTFOLIO — 3D CHARACTER ANIMATION</div>
+        <h1 class="serif hero-name">Grace Qiu Lo</h1>
+        <p class="hero-role">3D Character &amp; Creature Animator</p>
+        <p class="hero-tagline">Character animator with production experience across feature films, episodic animation, game cinematics and commercial content — full shot ownership from blocking to final polish, with a strong focus on performance-driven acting.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#experience">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7Z" fill="currentColor"/></svg>
+            View Experience
+          </a>
+          <a class="btn btn-ghost" href="mailto:graceqiulo2@gmail.com">Get in Touch</a>
+        </div>
+        <div class="contact-row">
+          <a href="mailto:graceqiulo2@gmail.com">graceqiulo2@gmail.com</a>
+          <a href="tel:+34688196477">+34 688 196 477</a>
+          <a href="https://linkedin.com/in/grace-qiu-lo/">linkedin.com/in/grace-qiu-lo</a>
+          <span>Barcelona, Spain</span>
+        </div>
+      </div>
+      <div class="reel-frame" id="reelFrame" role="button" tabindex="0" aria-label="Play full demo reel with sound">
+        <video class="reel-video" id="reelVideoBg" src="assets/demoreel.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        <div class="reel-overlay">
+          <span class="reel-play">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7Z" fill="currentColor"/></svg>
+          </span>
+          <span class="reel-label">Demo Reel — Click to Play</span>
+        </div>
+        <span class="reel-corner tl"></span><span class="reel-corner tr"></span>
+        <span class="reel-corner bl"></span><span class="reel-corner br"></span>
+      </div>
     </div>
   </div>
 </header>
@@ -407,3 +465,45 @@
     </div>
   </div>
 </footer>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close reel">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <video class="lightbox-video" id="lightboxVideo" src="assets/demoreel.mp4" controls playsinline></video>
+</div>
+
+<script>
+(function () {
+  var frame = document.getElementById('reelFrame');
+  var bgVideo = document.getElementById('reelVideoBg');
+  var lightbox = document.getElementById('lightbox');
+  var lbVideo = document.getElementById('lightboxVideo');
+  var closeBtn = document.getElementById('lightboxClose');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) { bgVideo.removeAttribute('autoplay'); bgVideo.pause(); }
+
+  function openReel() {
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    lbVideo.currentTime = bgVideo.currentTime || 0;
+    lbVideo.play();
+  }
+  function closeReel() {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    lbVideo.pause();
+  }
+  frame.addEventListener('click', openReel);
+  frame.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openReel(); }
+  });
+  closeBtn.addEventListener('click', closeReel);
+  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeReel(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeReel();
+  });
+})();
+</script>
