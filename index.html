@@ -56,7 +56,7 @@
     -webkit-text-stroke: 1px var(--line-strong); line-height: 1;
     pointer-events: none; user-select: none; z-index: 0;
   }
-  .section > * { position: relative; z-index: 1; }
+  .section > *:not(.num-bg) { position: relative; z-index: 1; }
 
   /* NAV */
   .nav {
@@ -71,13 +71,36 @@
   .brand svg { flex: none; color: var(--accent); }
   .nav-links { display: flex; align-items: center; gap: 34px; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
   .nav-links a { color: var(--fg-dim); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
   .nav-cta {
     border: 1px solid var(--line-strong); border-radius: 999px; padding: 8px 18px; font-size: 12px;
     letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg) !important;
-    transition: border-color .2s, color .2s;
+    transition: border-color .2s, color .2s; white-space: nowrap;
   }
   .nav-cta:hover { border-color: var(--accent); color: var(--accent) !important; }
-  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* LANGUAGE SWITCH */
+  .lang-switch { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; flex: none; }
+  .lang-switch button {
+    font-family: 'Space Mono', 'Courier New', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 7px 11px; background: transparent; border: 0; color: var(--fg-dim); cursor: pointer;
+    transition: background .2s, color .2s; line-height: 1;
+  }
+  .lang-switch button + button { border-left: 1px solid var(--line); }
+  .lang-switch button:hover { color: var(--fg); }
+  .lang-switch button.is-active { background: var(--accent); color: var(--accent-ink); }
+  .lang-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 720px) {
+    .nav { flex-wrap: wrap; gap: 10px 16px; padding: 14px clamp(16px, 5vw, 40px); }
+    .nav-links { order: 3; width: 100%; gap: 24px; font-size: 12px; }
+    .nav-right { margin-left: auto; }
+  }
+
+  /* VIEWS (top-bar routed pages) */
+  [data-view][hidden] { display: none !important; }
+  .nav-links a.is-current { color: var(--accent) !important; }
+  .brand-link { display: inline-flex; }
 
   /* HERO */
   .hero { position: relative; padding: clamp(64px, 12vw, 140px) clamp(24px, 6vw, 88px) clamp(56px, 8vw, 96px); overflow: hidden; }
@@ -175,6 +198,69 @@
   .chip { font-family: 'Space Mono', monospace; font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--fg-dim); }
   @media (max-width: 640px) { .role { grid-template-columns: 1fr; gap: 10px; } }
 
+  /* PRODUCTIONS */
+  .prod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(16px, 2.4vw, 28px); max-width: 1180px; margin: 0 auto; }
+  .prod-card { display: flex; flex-direction: column; gap: 14px; }
+  .prod-poster {
+    position: relative; display: block; border-radius: 14px; overflow: hidden; aspect-ratio: 2 / 3;
+    background: var(--bg-soft); border: 1px solid var(--line-strong);
+    box-shadow: 0 24px 60px -34px oklch(0 0 0 / 55%);
+  }
+  .prod-poster img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: saturate(0.9) brightness(0.9); transition: transform .45s ease, filter .45s ease;
+  }
+  .prod-poster:hover img, .prod-poster:focus-visible img { transform: scale(1.05); filter: saturate(1) brightness(1); }
+  .prod-poster::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent 55%, oklch(0.1 0.01 50 / 42%));
+    opacity: 0; transition: opacity .3s;
+  }
+  .prod-poster:hover::after { opacity: 1; }
+  .prod-tag {
+    position: absolute; left: 11px; top: 11px; z-index: 2;
+    font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 9px; border-radius: 999px; color: var(--fg-dim);
+    background: color-mix(in oklch, var(--bg) 58%, transparent); border: 1px solid var(--line-strong);
+    backdrop-filter: blur(4px);
+  }
+  .prod-poster .prod-ext {
+    position: absolute; right: 11px; bottom: 11px; z-index: 2; width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; color: var(--fg);
+    background: color-mix(in oklch, var(--bg) 55%, transparent); border: 1px solid var(--line-strong);
+    backdrop-filter: blur(4px); opacity: 0; transform: translateY(4px); transition: opacity .3s, transform .3s;
+  }
+  .prod-poster:hover .prod-ext, .prod-poster:focus-visible .prod-ext { opacity: 1; transform: translateY(0); }
+  .prod-meta { display: flex; flex-direction: column; gap: 3px; }
+  .prod-name { font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--fg); }
+  .prod-year { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--fg-faint); }
+  .prod-grid.is-video { grid-template-columns: repeat(3, 1fr); }
+  .prod-grid.is-video .prod-poster { aspect-ratio: 16 / 9; }
+  .prod-grid.is-video .prod-play {
+    position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;
+  }
+  .prod-grid.is-video .prod-play span {
+    width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: color-mix(in oklch, var(--bg) 45%, transparent); border: 1px solid var(--line-strong);
+    backdrop-filter: blur(4px); color: var(--fg); transition: transform .25s, border-color .25s, color .25s;
+  }
+  .prod-grid.is-video .prod-poster:hover .prod-play span { transform: scale(1.1); border-color: var(--accent); color: var(--accent); }
+  @media (max-width: 900px) { .prod-grid.is-video { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .prod-grid.is-video { grid-template-columns: 1fr; } }
+  .prod-block + .prod-block { margin-top: clamp(36px, 5vw, 56px); }
+  .prod-block-label { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-faint); margin: 0 0 22px; max-width: 1180px; margin-left: auto; margin-right: auto; }
+  @media (max-width: 900px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 680px) { .prod-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 420px) { .prod-grid { grid-template-columns: 1fr 1fr; gap: 14px; } }
+
+  /* DEMO REEL (embedded) */
+  .reel-embed {
+    position: relative; max-width: 1180px; margin: 0 auto; aspect-ratio: 16 / 9;
+    border-radius: 16px; overflow: hidden; border: 1px solid var(--line-strong);
+    background: var(--bg-soft); box-shadow: 0 30px 80px -34px oklch(0 0 0 / 55%);
+  }
+  .reel-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
   /* SKILLS */
   .skills-wrap { max-width: 1180px; margin: 0 auto; }
   .skill-block + .skill-block { margin-top: 44px; }
@@ -208,53 +294,64 @@
 <div class="grain"></div>
 
 <nav class="nav">
-  <div class="brand">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="currentColor" stroke-width="1.4"/>
-      <path d="M9.5 8.2 16 12l-6.5 3.8V8.2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
-    </svg>
-    <span>GRACE QIU LO</span>
-  </div>
+  <a class="brand-link" href="#home" aria-label="Grace Qiu Lo — home">
+    <span class="brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M9.5 8.2 16 12l-6.5 3.8V8.2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+      <span>GRACE QIU LO</span>
+    </span>
+  </a>
   <div class="nav-links">
-    <a href="#experience">Experience</a>
-    <a href="#skills">Skills</a>
-    <a href="#education">Education</a>
+    <a href="#home" data-route="home" data-i18n="nav.home">Home</a>
+    <a href="#productions" data-route="productions" data-i18n="nav.productions">Productions</a>
+    <a href="#reel" data-route="reel" data-i18n="nav.reel">Demo Reel</a>
+    <a href="#personal" data-route="personal" data-i18n="nav.personal">Personal Projects</a>
+    <a href="#resume" data-route="resume" data-i18n="nav.resume">Resume</a>
   </div>
-  <a class="nav-cta" href="#contact">Contact</a>
+  <div class="nav-right">
+    <div class="lang-switch" role="group" aria-label="Select language / Seleccionar idioma / 选择语言">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+      <button type="button" data-lang="zh">中文</button>
+    </div>
+    <a class="nav-cta" href="#contact" data-i18n="nav.contact">Contact</a>
+  </div>
 </nav>
 
-<header class="hero" id="top">
+<header class="hero" id="top" data-view="home">
   <div class="hero-glow"></div>
   <span class="corner tl"></span><span class="corner tr"></span>
   <span class="corner bl"></span><span class="corner br"></span>
   <div class="hero-inner">
     <div class="hero-grid">
       <div class="hero-copy">
-        <div class="eyebrow"><span class="dot"></span>PORTFOLIO — 3D CHARACTER ANIMATION</div>
+        <div class="eyebrow"><span class="dot"></span><span data-i18n="hero.eyebrow">PORTFOLIO — 3D CHARACTER ANIMATION</span></div>
         <h1 class="serif hero-name">Grace Qiu Lo</h1>
-        <p class="hero-role">3D Character &amp; Creature Animator</p>
-        <p class="hero-tagline">Character animator with production experience across feature films, episodic animation, game cinematics and commercial content — full shot ownership from blocking to final polish, with a strong focus on performance-driven acting.</p>
+        <p class="hero-role" data-i18n="hero.role">3D Character &amp; Creature Animator</p>
+        <p class="hero-tagline" data-i18n="hero.tagline">Character animator with production experience across feature films, episodic animation, game cinematics and commercial content — full shot ownership from blocking to final polish, with a strong focus on performance-driven acting.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#experience">
+          <a class="btn btn-primary" href="#resume">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7Z" fill="currentColor"/></svg>
-            View Experience
+            <span data-i18n="hero.viewResume">View Resume</span>
           </a>
-          <a class="btn btn-ghost" href="mailto:graceqiulo2@gmail.com">Get in Touch</a>
+          <a class="btn btn-ghost" href="mailto:graceqiulo2@gmail.com" data-i18n="hero.getInTouch">Get in Touch</a>
         </div>
         <div class="contact-row">
           <a href="mailto:graceqiulo2@gmail.com">graceqiulo2@gmail.com</a>
           <a href="tel:+34688196477">+34 688 196 477</a>
           <a href="https://linkedin.com/in/grace-qiu-lo/">linkedin.com/in/grace-qiu-lo</a>
-          <span>Barcelona, Spain</span>
+          <span data-i18n="hero.location">Barcelona, Spain</span>
         </div>
       </div>
-      <div class="reel-frame" id="reelFrame" role="button" tabindex="0" aria-label="Play full demo reel with sound">
+      <div class="reel-frame" id="reelFrame" role="button" tabindex="0" data-i18n-aria="hero.reelAria" aria-label="Play full demo reel with sound">
         <video class="reel-video" id="reelVideoBg" src="assets/demoreel-preview.mp4" autoplay muted loop playsinline preload="auto"></video>
         <div class="reel-overlay">
           <span class="reel-play">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7Z" fill="currentColor"/></svg>
           </span>
-          <span class="reel-label">Demo Reel — Click to Play</span>
+          <span class="reel-label" data-i18n="hero.reelLabel">Demo Reel — Click to Play</span>
         </div>
         <span class="reel-corner tl"></span><span class="reel-corner tr"></span>
         <span class="reel-corner bl"></span><span class="reel-corner br"></span>
@@ -265,47 +362,147 @@
 
 <main>
 
-  <section class="section" id="profile">
+  <section class="section" id="profile" data-view="home">
     <span class="num-bg">01</span>
     <div class="section-head">
-      <div class="eyebrow"><span class="dot"></span>01 — Profile</div>
-      <h2 class="serif section-title">Performance first,<br>craft always.</h2>
+      <div class="eyebrow"><span class="dot"></span><span data-i18n="profile.eyebrow">01 — Profile</span></div>
+      <h2 class="serif section-title" data-i18n-html="profile.title">Performance first,<br>craft always.</h2>
     </div>
     <div class="profile-grid">
-      <div class="mono" style="font-size:13px; color:var(--fg-faint); letter-spacing:.04em; line-height:1.7; padding-top:6px;">
+      <div class="mono" style="font-size:13px; color:var(--fg-faint); letter-spacing:.04em; line-height:1.7; padding-top:6px;" data-i18n-html="profile.categories">
         FEATURE FILM<br>EPISODIC TV<br>GAME CINEMATICS<br>COMMERCIAL<br>AR / REAL-TIME
       </div>
       <div>
-        <p class="profile-text">Character animator with production experience across feature films, episodic animation, game cinematics, and commercial content. Strong focus on performance-driven animation, shot ownership from blocking to polish, and high-quality character acting.</p>
-        <p class="profile-text">Experienced in keyframe animation and mocap cleanup workflows within fast-paced international production pipelines — with strong adaptability to different studio standards and workflows.</p>
+        <p class="profile-text" data-i18n="profile.p1">Character animator with production experience across feature films, episodic animation, game cinematics, and commercial content. Strong focus on performance-driven animation, shot ownership from blocking to polish, and high-quality character acting.</p>
+        <p class="profile-text" data-i18n="profile.p2">Experienced in keyframe animation and mocap cleanup workflows within fast-paced international production pipelines — with strong adaptability to different studio standards and workflows.</p>
         <div class="stat-row">
-          <div class="stat"><b>16</b><span>Productions Shipped</span></div>
-          <div class="stat"><b>5</b><span>Studios &amp; Teams</span></div>
-          <div class="stat"><b>2022</b><span>Working Since — Present</span></div>
+          <div class="stat"><b>16</b><span data-i18n="profile.stat1">Productions Shipped</span></div>
+          <div class="stat"><b>5</b><span data-i18n="profile.stat2">Studios &amp; Teams</span></div>
+          <div class="stat"><b>2022</b><span data-i18n="profile.stat3">Working Since — Present</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="experience">
-    <span class="num-bg">02</span>
+  <section class="section" id="productions" data-view="productions">
+    <span class="num-bg">01</span>
     <div class="section-head">
-      <div class="eyebrow"><span class="dot"></span>02 — Experience</div>
-      <h2 class="serif section-title">Studio credits.</h2>
+      <div class="eyebrow"><span class="dot"></span><span data-i18n="prod.eyebrow">01 — Productions</span></div>
+      <h2 class="serif section-title" data-i18n="prod.title">Selected productions.</h2>
+    </div>
+
+    <div class="prod-block">
+      <p class="prod-block-label" data-i18n="prod.films">Feature films</p>
+      <div class="prod-grid">
+
+        <a class="prod-card" href="https://www.imdb.com/title/tt27949746/" target="_blank" rel="noopener noreferrer">
+          <span class="prod-poster">
+            <span class="prod-tag">IMDb</span>
+            <img src="assets/productions/kuzya.jpg" alt="Domovyonok Kuzya poster" loading="lazy" width="1280" height="1920">
+            <span class="prod-ext" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M17 7H9m8 0v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </span>
+          <span class="prod-meta">
+            <span class="prod-name">Domovyonok Kuzya</span>
+            <span class="prod-year">2024</span>
+          </span>
+        </a>
+
+        <a class="prod-card" href="https://www.imdb.com/title/tt32019321/" target="_blank" rel="noopener noreferrer">
+          <span class="prod-poster">
+            <span class="prod-tag">IMDb</span>
+            <img src="assets/productions/prostokvashino.jpg" alt="Prostokvashino poster" loading="lazy" width="1280" height="1920">
+            <span class="prod-ext" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M17 7H9m8 0v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </span>
+          <span class="prod-meta">
+            <span class="prod-name">Prostokvashino</span>
+            <span class="prod-year">2026</span>
+          </span>
+        </a>
+
+        <a class="prod-card" href="https://www.imdb.com/title/tt29952017/" target="_blank" rel="noopener noreferrer">
+          <span class="prod-poster">
+            <span class="prod-tag">IMDb</span>
+            <img src="assets/productions/tsar-saltan.jpg" alt="The Tale of Tsar Saltan poster" loading="lazy" width="1280" height="1920">
+            <span class="prod-ext" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M17 7H9m8 0v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </span>
+          <span class="prod-meta">
+            <span class="prod-name">The Tale of Tsar Saltan</span>
+            <span class="prod-year">2026</span>
+          </span>
+        </a>
+
+        <a class="prod-card" href="https://www.imdb.com/title/tt6986324/" target="_blank" rel="noopener noreferrer">
+          <span class="prod-poster">
+            <span class="prod-tag">IMDb</span>
+            <img src="assets/productions/pinocchio.jpg" alt="Pinocchio and the Water of Life poster" loading="lazy" width="3600" height="5400">
+            <span class="prod-ext" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M17 7H9m8 0v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </span>
+          <span class="prod-meta">
+            <span class="prod-name">Pinocchio and the Water of Life</span>
+            <span class="prod-year">2021</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="prod-block">
+      <p class="prod-block-label" data-i18n="prod.trailers">Trailers &amp; spots</p>
+      <div class="prod-grid" id="prodVideoGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="reel" data-view="reel">
+    <span class="num-bg">01</span>
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-i18n="reel.eyebrow">01 — Demo Reel</span></div>
+      <h2 class="serif section-title" data-i18n="reel.title">Demo reel.</h2>
+    </div>
+    <div class="reel-embed">
+      <iframe src="https://player.vimeo.com/video/1168657178?title=0&amp;byline=0&amp;portrait=0&amp;dnt=1"
+        title="Grace Qiu Lo — 2026 Animation Demo Reel"
+        allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <section class="section" id="personal" data-view="personal">
+    <span class="num-bg">01</span>
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-i18n="personal.eyebrow">01 — Personal Projects</span></div>
+      <h2 class="serif section-title" data-i18n="personal.title">Personal projects.</h2>
+    </div>
+    <div class="prod-block">
+      <div class="prod-grid" id="personalVideoGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="experience" data-view="resume">
+    <span class="num-bg">01</span>
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-i18n="exp.eyebrow">01 — Experience</span></div>
+      <h2 class="serif section-title" data-i18n="exp.title">Studio credits.</h2>
     </div>
     <div class="role-list">
 
       <div class="role">
-        <div class="role-date">JUL 2023<br>— PRESENT</div>
+        <div class="role-date" data-i18n-html="role1.date">JUL 2023<br>— PRESENT</div>
         <div>
-          <h3 class="role-title">3D Animator</h3>
+          <h3 class="role-title" data-i18n="role1.title">3D Animator</h3>
           <p class="role-org">Asymmetric VFX Studio</p>
           <ul class="role-bullets">
-            <li>Full shot ownership: blocking, spline, polish, final delivery</li>
-            <li>Character performance animation with strong acting focus</li>
-            <li>Collaboration with layout, lighting and CFX departments</li>
-            <li>Work closely with directors, contributing creative ideas that enhance storytelling</li>
-            <li>Consistent delivery under production deadlines in episodic pipelines</li>
+            <li data-i18n="role1.b1">Full shot ownership: blocking, spline, polish, final delivery</li>
+            <li data-i18n="role1.b2">Character performance animation with strong acting focus</li>
+            <li data-i18n="role1.b3">Collaboration with layout, lighting and CFX departments</li>
+            <li data-i18n="role1.b4">Work closely with directors, contributing creative ideas that enhance storytelling</li>
+            <li data-i18n="role1.b5">Consistent delivery under production deadlines in episodic pipelines</li>
           </ul>
           <div class="chips">
             <span class="chip">Little Brownie Kuzya 1 &amp; 2</span>
@@ -318,14 +515,14 @@
       </div>
 
       <div class="role">
-        <div class="role-date">MAY 2024<br>— SEP 2024</div>
+        <div class="role-date" data-i18n-html="role2.date">MAY 2024<br>— SEP 2024</div>
         <div>
-          <h3 class="role-title">3D Animator / Layout Artist</h3>
+          <h3 class="role-title" data-i18n="role2.title">3D Animator / Layout Artist</h3>
           <p class="role-org">Gizmo Animation Studio</p>
           <ul class="role-bullets">
-            <li>Cinematic layout: camera staging, composition, shot design</li>
-            <li>Character animation for narrative-driven trailers</li>
-            <li>Visual storytelling aligned with IP and marketing direction</li>
+            <li data-i18n="role2.b1">Cinematic layout: camera staging, composition, shot design</li>
+            <li data-i18n="role2.b2">Character animation for narrative-driven trailers</li>
+            <li data-i18n="role2.b3">Visual storytelling aligned with IP and marketing direction</li>
           </ul>
           <div class="chips">
             <span class="chip">Monopoly Game Trailer</span>
@@ -336,12 +533,12 @@
       </div>
 
       <div class="role">
-        <div class="role-date">JUL 2025<br>— SEP 2025</div>
+        <div class="role-date" data-i18n-html="role3.date">JUL 2025<br>— SEP 2025</div>
         <div>
-          <h3 class="role-title">3D Animator · Freelance</h3>
+          <h3 class="role-title" data-i18n="role3.title">3D Animator · Freelance</h3>
           <p class="role-org">Tucan Studio</p>
           <ul class="role-bullets">
-            <li>High-end commercial animation with feature-film quality standards</li>
+            <li data-i18n="role3.b1">High-end commercial animation with feature-film quality standards</li>
           </ul>
           <div class="chips">
             <span class="chip">Ueno Bank</span>
@@ -351,14 +548,14 @@
       </div>
 
       <div class="role">
-        <div class="role-date">APR 2022<br>— NOV 2022</div>
+        <div class="role-date" data-i18n-html="role4.date">APR 2022<br>— NOV 2022</div>
         <div>
-          <h3 class="role-title">3D Animator</h3>
+          <h3 class="role-title" data-i18n="role4.title">3D Animator</h3>
           <p class="role-org">3DAR</p>
           <ul class="role-bullets">
-            <li>Facial motion capture cleanup for Meta Horizon — top correction efficiency</li>
-            <li>Keyframe animation for AR filters and interactive experiences</li>
-            <li>Hybrid animation for live-action + CGI integration</li>
+            <li data-i18n="role4.b1">Facial motion capture cleanup for Meta Horizon — top correction efficiency</li>
+            <li data-i18n="role4.b2">Keyframe animation for AR filters and interactive experiences</li>
+            <li data-i18n="role4.b3">Hybrid animation for live-action + CGI integration</li>
           </ul>
           <div class="chips">
             <span class="chip">Addicted (Music Video)</span>
@@ -370,14 +567,14 @@
       </div>
 
       <div class="role">
-        <div class="role-date">MAR 2024</div>
+        <div class="role-date" data-i18n-html="role5.date">MAR 2024</div>
         <div>
-          <h3 class="role-title">Animation Instructor</h3>
+          <h3 class="role-title" data-i18n="role5.title">Animation Instructor</h3>
           <p class="role-org">ESCAC</p>
           <ul class="role-bullets">
-            <li>Designed animation curriculum for the VFX Master's program</li>
-            <li>Mentored students in body mechanics, acting and shot development</li>
-            <li>Provided professional feedback for demo reel improvement</li>
+            <li data-i18n="role5.b1">Designed animation curriculum for the VFX Master's program</li>
+            <li data-i18n="role5.b2">Mentored students in body mechanics, acting and shot development</li>
+            <li data-i18n="role5.b3">Provided professional feedback for demo reel improvement</li>
           </ul>
         </div>
       </div>
@@ -385,15 +582,35 @@
     </div>
   </section>
 
-  <section class="section" id="skills">
+  <section class="section" id="education" data-view="resume">
+    <span class="num-bg">02</span>
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span><span data-i18n="edu.eyebrow">02 — Education</span></div>
+      <h2 class="serif section-title" data-i18n="edu.title">Training &amp; mentorship.</h2>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <span class="edu-date">2019 — 2023</span>
+        <h3 data-i18n="edu.card1.title">FX Animation — Barcelona Film School</h3>
+        <p data-i18n="edu.card1.desc">Specialization: Character &amp; Creature Animation</p>
+      </div>
+      <div class="edu-card">
+        <span class="edu-date">2024</span>
+        <h3>The Animation Box</h3>
+        <p data-i18n="edu.card2.desc">Mentorship with Yury Lementy</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills" data-view="resume">
     <span class="num-bg">03</span>
     <div class="section-head">
-      <div class="eyebrow"><span class="dot"></span>03 — Toolkit</div>
-      <h2 class="serif section-title">Software &amp; languages.</h2>
+      <div class="eyebrow"><span class="dot"></span><span data-i18n="skills.eyebrow">03 — Toolkit</span></div>
+      <h2 class="serif section-title" data-i18n="skills.title">Software &amp; languages.</h2>
     </div>
     <div class="skills-wrap">
       <div class="skill-block">
-        <p class="skill-label">Software</p>
+        <p class="skill-label" data-i18n="skills.software">Software</p>
         <div class="pill-row">
           <span class="pill">Maya</span>
           <span class="pill">Unreal Engine</span>
@@ -406,74 +623,468 @@
         </div>
       </div>
       <div class="skill-block">
-        <p class="skill-label">Languages</p>
+        <p class="skill-label" data-i18n="skills.languages">Languages</p>
         <div class="pill-row">
-          <span class="pill">Spanish <span class="lvl">NATIVE</span></span>
-          <span class="pill">Chinese Mandarin <span class="lvl">NATIVE</span></span>
-          <span class="pill">Cantonese <span class="lvl">NATIVE</span></span>
-          <span class="pill">Catalan <span class="lvl">NATIVE</span></span>
-          <span class="pill">English <span class="lvl">C1</span></span>
+          <span class="pill"><span data-i18n="lang.spanish">Spanish</span> <span class="lvl" data-i18n="lvl.native">NATIVE</span></span>
+          <span class="pill"><span data-i18n="lang.mandarin">Chinese Mandarin</span> <span class="lvl" data-i18n="lvl.native">NATIVE</span></span>
+          <span class="pill"><span data-i18n="lang.cantonese">Cantonese</span> <span class="lvl" data-i18n="lvl.native">NATIVE</span></span>
+          <span class="pill"><span data-i18n="lang.catalan">Catalan</span> <span class="lvl" data-i18n="lvl.native">NATIVE</span></span>
+          <span class="pill"><span data-i18n="lang.english">English</span> <span class="lvl">C1</span></span>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="education">
-    <span class="num-bg">04</span>
-    <div class="section-head">
-      <div class="eyebrow"><span class="dot"></span>04 — Education</div>
-      <h2 class="serif section-title">Training &amp; mentorship.</h2>
-    </div>
-    <div class="edu-grid">
-      <div class="edu-card">
-        <span class="edu-date">2019 — 2023</span>
-        <h3>FX Animation — Barcelona Film School</h3>
-        <p>Specialization: Character &amp; Creature Animation</p>
-      </div>
-      <div class="edu-card">
-        <span class="edu-date">2024</span>
-        <h3>The Animation Box</h3>
-        <p>Mentorship with Yury Lementy</p>
       </div>
     </div>
   </section>
 
 </main>
 
-<footer class="footer" id="contact">
-  <span class="num-bg">05</span>
+<footer class="footer" id="contact" data-view="home">
+  <span class="num-bg">02</span>
   <div class="footer-inner">
-    <div class="eyebrow" style="margin-bottom:22px;"><span class="dot"></span>05 — Contact</div>
-    <h2 class="serif footer-title">Let's bring your next character to life.</h2>
+    <div class="eyebrow" style="margin-bottom:22px;"><span class="dot"></span><span data-i18n="footer.eyebrow">02 — Contact</span></div>
+    <h2 class="serif footer-title" data-i18n="footer.title">Let's bring your next character to life.</h2>
     <div class="footer-links">
       <div class="footer-link">
-        <span class="lbl">Email</span>
+        <span class="lbl" data-i18n="footer.email">Email</span>
         <a href="mailto:graceqiulo2@gmail.com">graceqiulo2@gmail.com</a>
       </div>
       <div class="footer-link">
-        <span class="lbl">Phone</span>
+        <span class="lbl" data-i18n="footer.phone">Phone</span>
         <a href="tel:+34688196477">+34 688 196 477</a>
       </div>
       <div class="footer-link">
-        <span class="lbl">LinkedIn</span>
+        <span class="lbl" data-i18n="footer.linkedin">LinkedIn</span>
         <a href="https://linkedin.com/in/grace-qiu-lo/">linkedin.com/in/grace-qiu-lo</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Grace Qiu Lo — 3D Character &amp; Creature Animator</span>
-      <a href="#top">Back to top ↑</a>
+      <span data-i18n="footer.copyright">© 2026 Grace Qiu Lo — 3D Character &amp; Creature Animator</span>
+      <a href="#top" data-i18n="footer.backToTop">Back to top ↑</a>
     </div>
   </div>
 </footer>
 
 <div class="lightbox" id="lightbox" aria-hidden="true">
-  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close reel">
+  <button class="lightbox-close" id="lightboxClose" type="button" data-i18n-aria="lightbox.close" aria-label="Close reel">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <video class="lightbox-video" id="lightboxVideo" src="assets/demoreel.mp4" controls playsinline></video>
 </div>
 
 <script>
+/* ---------- top-bar routing (sections as pages) ---------- */
+(function () {
+  var ROUTES = { home: 1, productions: 1, reel: 1, personal: 1, resume: 1 };
+  var navLinks = document.querySelectorAll('.nav-links a[data-route]');
+  var els = document.querySelectorAll('[data-view]');
+
+  function show(view, scrollToId) {
+    els.forEach(function (el) { el.hidden = (el.getAttribute('data-view') !== view); });
+    navLinks.forEach(function (a) {
+      a.classList.toggle('is-current', a.getAttribute('data-route') === view);
+    });
+    var target = scrollToId && document.getElementById(scrollToId);
+    if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    else { window.scrollTo(0, 0); }
+  }
+
+  function route() {
+    var h = (location.hash || '').replace(/^#/, '');
+    if (h === 'contact') return show('home', 'contact');
+    if (h === 'top') return show('home');
+    show(ROUTES[h] ? h : 'home');
+  }
+
+  window.addEventListener('hashchange', route);
+  route();
+})();
+
+/* ---------- i18n ---------- */
+(function () {
+  var I18N = {
+    en: {
+      "nav.home": "Home",
+      "nav.productions": "Productions",
+      "nav.reel": "Demo Reel",
+      "nav.personal": "Personal Projects",
+      "nav.resume": "Resume",
+      "nav.experience": "Experience",
+      "nav.skills": "Skills",
+      "nav.education": "Education",
+      "nav.contact": "Contact",
+      "reel.eyebrow": "01 — Demo Reel",
+      "reel.title": "Demo reel.",
+      "personal.eyebrow": "01 — Personal Projects",
+      "personal.title": "Personal projects.",
+      "prod.eyebrow": "01 — Productions",
+      "prod.title": "Selected productions.",
+      "prod.films": "Feature films",
+      "prod.trailers": "Trailers & spots",
+      "hero.eyebrow": "PORTFOLIO — 3D CHARACTER ANIMATION",
+      "hero.role": "3D Character & Creature Animator",
+      "hero.tagline": "Character animator with production experience across feature films, episodic animation, game cinematics and commercial content — full shot ownership from blocking to final polish, with a strong focus on performance-driven acting.",
+      "hero.viewResume": "View Resume",
+      "hero.getInTouch": "Get in Touch",
+      "hero.location": "Barcelona, Spain",
+      "hero.reelLabel": "Demo Reel — Click to Play",
+      "hero.reelAria": "Play full demo reel with sound",
+      "profile.eyebrow": "01 — Profile",
+      "profile.title": "Performance first,<br>craft always.",
+      "profile.categories": "FEATURE FILM<br>EPISODIC TV<br>GAME CINEMATICS<br>COMMERCIAL<br>AR / REAL-TIME",
+      "profile.p1": "Character animator with production experience across feature films, episodic animation, game cinematics, and commercial content. Strong focus on performance-driven animation, shot ownership from blocking to polish, and high-quality character acting.",
+      "profile.p2": "Experienced in keyframe animation and mocap cleanup workflows within fast-paced international production pipelines — with strong adaptability to different studio standards and workflows.",
+      "profile.stat1": "Productions Shipped",
+      "profile.stat2": "Studios & Teams",
+      "profile.stat3": "Working Since — Present",
+      "exp.eyebrow": "01 — Experience",
+      "exp.title": "Studio credits.",
+      "role1.date": "JUL 2023<br>— PRESENT",
+      "role1.title": "3D Animator",
+      "role1.b1": "Full shot ownership: blocking, spline, polish, final delivery",
+      "role1.b2": "Character performance animation with strong acting focus",
+      "role1.b3": "Collaboration with layout, lighting and CFX departments",
+      "role1.b4": "Work closely with directors, contributing creative ideas that enhance storytelling",
+      "role1.b5": "Consistent delivery under production deadlines in episodic pipelines",
+      "role2.date": "MAY 2024<br>— SEP 2024",
+      "role2.title": "3D Animator / Layout Artist",
+      "role2.b1": "Cinematic layout: camera staging, composition, shot design",
+      "role2.b2": "Character animation for narrative-driven trailers",
+      "role2.b3": "Visual storytelling aligned with IP and marketing direction",
+      "role3.date": "JUL 2025<br>— SEP 2025",
+      "role3.title": "3D Animator · Freelance",
+      "role3.b1": "High-end commercial animation with feature-film quality standards",
+      "role4.date": "APR 2022<br>— NOV 2022",
+      "role4.title": "3D Animator",
+      "role4.b1": "Facial motion capture cleanup for Meta Horizon — top correction efficiency",
+      "role4.b2": "Keyframe animation for AR filters and interactive experiences",
+      "role4.b3": "Hybrid animation for live-action + CGI integration",
+      "role5.date": "MAR 2024",
+      "role5.title": "Animation Instructor",
+      "role5.b1": "Designed animation curriculum for the VFX Master's program",
+      "role5.b2": "Mentored students in body mechanics, acting and shot development",
+      "role5.b3": "Provided professional feedback for demo reel improvement",
+      "skills.eyebrow": "03 — Toolkit",
+      "skills.title": "Software & languages.",
+      "skills.software": "Software",
+      "skills.languages": "Languages",
+      "lang.spanish": "Spanish",
+      "lang.mandarin": "Chinese Mandarin",
+      "lang.cantonese": "Cantonese",
+      "lang.catalan": "Catalan",
+      "lang.english": "English",
+      "lvl.native": "NATIVE",
+      "edu.eyebrow": "02 — Education",
+      "edu.title": "Training & mentorship.",
+      "edu.card1.title": "FX Animation — Barcelona Film School",
+      "edu.card1.desc": "Specialization: Character & Creature Animation",
+      "edu.card2.desc": "Mentorship with Yury Lementy",
+      "footer.eyebrow": "02 — Contact",
+      "footer.title": "Let's bring your next character to life.",
+      "footer.email": "Email",
+      "footer.phone": "Phone",
+      "footer.linkedin": "LinkedIn",
+      "footer.copyright": "© 2026 Grace Qiu Lo — 3D Character & Creature Animator",
+      "footer.backToTop": "Back to top ↑",
+      "lightbox.close": "Close reel"
+    },
+    es: {
+      "nav.home": "Inicio",
+      "nav.productions": "Producciones",
+      "nav.reel": "Demo Reel",
+      "nav.personal": "Proyectos personales",
+      "nav.resume": "Currículum",
+      "nav.experience": "Experiencia",
+      "nav.skills": "Habilidades",
+      "nav.education": "Educación",
+      "nav.contact": "Contacto",
+      "reel.eyebrow": "01 — Demo Reel",
+      "reel.title": "Demo reel.",
+      "personal.eyebrow": "01 — Proyectos personales",
+      "personal.title": "Proyectos personales.",
+      "prod.eyebrow": "01 — Producciones",
+      "prod.title": "Producciones destacadas.",
+      "prod.films": "Largometrajes",
+      "prod.trailers": "Tráileres y spots",
+      "hero.eyebrow": "PORTFOLIO — ANIMACIÓN DE PERSONAJES 3D",
+      "hero.role": "Animadora de Personajes y Criaturas 3D",
+      "hero.tagline": "Animadora de personajes con experiencia en producción en largometrajes, series de animación, cinemáticas de videojuegos y contenido publicitario — responsabilidad completa del plano, del blocking al pulido final, con un fuerte enfoque en la interpretación actoral.",
+      "hero.viewResume": "Ver currículum",
+      "hero.getInTouch": "Contactar",
+      "hero.location": "Barcelona, España",
+      "hero.reelLabel": "Demo Reel — Haz clic para reproducir",
+      "hero.reelAria": "Reproducir el demo reel completo con sonido",
+      "profile.eyebrow": "01 — Perfil",
+      "profile.title": "La interpretación primero,<br>el oficio siempre.",
+      "profile.categories": "LARGOMETRAJE<br>SERIES DE TV<br>CINEMÁTICAS DE JUEGOS<br>PUBLICIDAD<br>AR / TIEMPO REAL",
+      "profile.p1": "Animadora de personajes con experiencia en producción en largometrajes, series de animación, cinemáticas de videojuegos y contenido publicitario. Fuerte enfoque en la animación basada en la interpretación, responsabilidad del plano del blocking al pulido y actuación de personajes de alta calidad.",
+      "profile.p2": "Con experiencia en animación por keyframe y flujos de limpieza de captura de movimiento en pipelines de producción internacionales de ritmo rápido, con gran capacidad de adaptación a distintos estándares y flujos de trabajo de cada estudio.",
+      "profile.stat1": "Producciones entregadas",
+      "profile.stat2": "Estudios y equipos",
+      "profile.stat3": "En activo desde — Presente",
+      "exp.eyebrow": "01 — Experiencia",
+      "exp.title": "Créditos de estudio.",
+      "role1.date": "JUL 2023<br>— PRESENTE",
+      "role1.title": "Animadora 3D",
+      "role1.b1": "Responsabilidad completa del plano: blocking, spline, pulido, entrega final",
+      "role1.b2": "Animación de interpretación de personajes con fuerte enfoque actoral",
+      "role1.b3": "Colaboración con los departamentos de layout, iluminación y CFX",
+      "role1.b4": "Trabajo estrecho con los directores, aportando ideas creativas que refuerzan la narrativa",
+      "role1.b5": "Entregas consistentes dentro de los plazos de producción en pipelines de series",
+      "role2.date": "MAY 2024<br>— SEP 2024",
+      "role2.title": "Animadora 3D / Artista de Layout",
+      "role2.b1": "Layout cinemático: puesta en escena de cámara, composición, diseño de planos",
+      "role2.b2": "Animación de personajes para tráileres narrativos",
+      "role2.b3": "Narrativa visual alineada con la IP y la dirección de marketing",
+      "role3.date": "JUL 2025<br>— SEP 2025",
+      "role3.title": "Animadora 3D · Autónoma",
+      "role3.b1": "Animación publicitaria de alto nivel con estándares de calidad de largometraje",
+      "role4.date": "ABR 2022<br>— NOV 2022",
+      "role4.title": "Animadora 3D",
+      "role4.b1": "Limpieza de captura de movimiento facial para Meta Horizon — máxima eficiencia de corrección",
+      "role4.b2": "Animación por keyframe para filtros de AR y experiencias interactivas",
+      "role4.b3": "Animación híbrida para la integración de imagen real + CGI",
+      "role5.date": "MAR 2024",
+      "role5.title": "Profesora de Animación",
+      "role5.b1": "Diseño del temario de animación para el Máster en VFX",
+      "role5.b2": "Tutoría a estudiantes en mecánica corporal, interpretación y desarrollo de planos",
+      "role5.b3": "Feedback profesional para la mejora del demo reel",
+      "skills.eyebrow": "03 — Herramientas",
+      "skills.title": "Software e idiomas.",
+      "skills.software": "Software",
+      "skills.languages": "Idiomas",
+      "lang.spanish": "Español",
+      "lang.mandarin": "Chino mandarín",
+      "lang.cantonese": "Cantonés",
+      "lang.catalan": "Catalán",
+      "lang.english": "Inglés",
+      "lvl.native": "NATIVO",
+      "edu.eyebrow": "02 — Educación",
+      "edu.title": "Formación y mentoría.",
+      "edu.card1.title": "FX Animation — Barcelona Film School",
+      "edu.card1.desc": "Especialización: Animación de Personajes y Criaturas",
+      "edu.card2.desc": "Mentoría con Yury Lementy",
+      "footer.eyebrow": "02 — Contacto",
+      "footer.title": "Demos vida a tu próximo personaje.",
+      "footer.email": "Email",
+      "footer.phone": "Teléfono",
+      "footer.linkedin": "LinkedIn",
+      "footer.copyright": "© 2026 Grace Qiu Lo — Animadora de Personajes y Criaturas 3D",
+      "footer.backToTop": "Volver arriba ↑",
+      "lightbox.close": "Cerrar reel"
+    },
+    zh: {
+      "nav.home": "主页",
+      "nav.productions": "作品",
+      "nav.reel": "演示片",
+      "nav.personal": "个人项目",
+      "nav.resume": "简历",
+      "nav.experience": "工作经历",
+      "nav.skills": "技能",
+      "nav.education": "教育背景",
+      "nav.contact": "联系",
+      "reel.eyebrow": "01 — 演示片",
+      "reel.title": "演示片。",
+      "personal.eyebrow": "01 — 个人项目",
+      "personal.title": "个人项目。",
+      "prod.eyebrow": "01 — 作品",
+      "prod.title": "精选作品。",
+      "prod.films": "长片电影",
+      "prod.trailers": "预告片与广告",
+      "hero.eyebrow": "作品集 — 三维角色动画",
+      "hero.role": "三维角色与生物动画师",
+      "hero.tagline": "角色动画师，拥有长片电影、剧集动画、游戏过场动画及商业内容的制作经验——从 blocking 到最终精修全程负责镜头，尤其注重表演驱动的演技。",
+      "hero.viewResume": "查看简历",
+      "hero.getInTouch": "取得联系",
+      "hero.location": "西班牙，巴塞罗那",
+      "hero.reelLabel": "演示片 — 点击播放",
+      "hero.reelAria": "播放带声音的完整演示片",
+      "profile.eyebrow": "01 — 简介",
+      "profile.title": "表演至上，<br>技艺永恒。",
+      "profile.categories": "长片电影<br>电视剧集<br>游戏过场动画<br>广告<br>AR / 实时",
+      "profile.p1": "角色动画师，拥有长片电影、剧集动画、游戏过场动画及商业内容的制作经验。专注于表演驱动的动画、从 blocking 到精修的镜头负责制，以及高质量的角色演技。",
+      "profile.p2": "熟悉关键帧动画与动作捕捉清理流程，能够在快节奏的国际制作管线中工作——对不同工作室的标准与流程具有很强的适应能力。",
+      "profile.stat1": "已交付作品",
+      "profile.stat2": "工作室与团队",
+      "profile.stat3": "从业至今",
+      "exp.eyebrow": "01 — 工作经历",
+      "exp.title": "工作室履历。",
+      "role1.date": "2023年7月<br>— 至今",
+      "role1.title": "三维动画师",
+      "role1.b1": "全程负责镜头：blocking、曲线、精修、最终交付",
+      "role1.b2": "注重演技的角色表演动画",
+      "role1.b3": "与布局、灯光及角色特效（CFX）部门协作",
+      "role1.b4": "与导演密切合作，提出增强叙事的创意想法",
+      "role1.b5": "在剧集管线中按制作期限稳定交付",
+      "role2.date": "2024年5月<br>— 2024年9月",
+      "role2.title": "三维动画师 / 布局师",
+      "role2.b1": "电影化布局：摄影机走位、构图、镜头设计",
+      "role2.b2": "为叙事导向的预告片制作角色动画",
+      "role2.b3": "与 IP 及市场方向一致的视觉叙事",
+      "role3.date": "2025年7月<br>— 2025年9月",
+      "role3.title": "三维动画师 · 自由职业",
+      "role3.b1": "达到长片电影质量标准的高端广告动画",
+      "role4.date": "2022年4月<br>— 2022年11月",
+      "role4.title": "三维动画师",
+      "role4.b1": "为 Meta Horizon 进行面部动作捕捉清理——修正效率名列前茅",
+      "role4.b2": "为 AR 滤镜和互动体验制作关键帧动画",
+      "role4.b3": "用于真人实拍与 CGI 融合的混合动画",
+      "role5.date": "2024年3月",
+      "role5.title": "动画讲师",
+      "role5.b1": "为视觉特效硕士课程设计动画教学大纲",
+      "role5.b2": "指导学生学习身体力学、表演及镜头开发",
+      "role5.b3": "为演示片的改进提供专业反馈",
+      "skills.eyebrow": "03 — 工具箱",
+      "skills.title": "软件与语言。",
+      "skills.software": "软件",
+      "skills.languages": "语言",
+      "lang.spanish": "西班牙语",
+      "lang.mandarin": "普通话",
+      "lang.cantonese": "粤语",
+      "lang.catalan": "加泰罗尼亚语",
+      "lang.english": "英语",
+      "lvl.native": "母语",
+      "edu.eyebrow": "02 — 教育背景",
+      "edu.title": "培训与指导。",
+      "edu.card1.title": "FX Animation — 巴塞罗那电影学院",
+      "edu.card1.desc": "专业方向：角色与生物动画",
+      "edu.card2.desc": "由 Yury Lementy 指导",
+      "footer.eyebrow": "02 — 联系",
+      "footer.title": "让我们一起为你的下一个角色注入生命。",
+      "footer.email": "邮箱",
+      "footer.phone": "电话",
+      "footer.linkedin": "领英",
+      "footer.copyright": "© 2026 Grace Qiu Lo — 三维角色与生物动画师",
+      "footer.backToTop": "返回顶部 ↑",
+      "lightbox.close": "关闭"
+    }
+  };
+
+  var LANG_TAG = { en: "en", es: "es", zh: "zh-Hans" };
+  var buttons = document.querySelectorAll(".lang-switch button");
+
+  function apply(lang) {
+    if (!I18N[lang]) lang = "en";
+    var dict = I18N[lang];
+    var fallback = I18N.en;
+
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n");
+      var v = dict[k] != null ? dict[k] : fallback[k];
+      if (v != null) el.textContent = v;
+    });
+    document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n-html");
+      var v = dict[k] != null ? dict[k] : fallback[k];
+      if (v != null) el.innerHTML = v;
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n-aria");
+      var v = dict[k] != null ? dict[k] : fallback[k];
+      if (v != null) el.setAttribute("aria-label", v);
+    });
+
+    document.documentElement.lang = LANG_TAG[lang] || "en";
+    buttons.forEach(function (b) {
+      b.classList.toggle("is-active", b.getAttribute("data-lang") === lang);
+      b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
+    });
+    try { localStorage.setItem("lang", lang); } catch (e) {}
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () { apply(b.getAttribute("data-lang")); });
+  });
+
+  var initial;
+  try { initial = localStorage.getItem("lang"); } catch (e) {}
+  if (!initial) {
+    var nav = (navigator.language || "en").toLowerCase();
+    if (nav.indexOf("zh") === 0) initial = "zh";
+    else if (nav.indexOf("es") === 0) initial = "es";
+    else initial = "en";
+  }
+  apply(initial);
+})();
+
+/* ---------- video grids (YouTube / Vimeo) ---------- */
+(function () {
+  /* `url` accepts a full YouTube or Vimeo link (or a bare YouTube id).
+     `title` shows under the thumbnail; clicking the card opens the video on its host site.
+     Leave `title` blank to auto-fill it (and the thumbnail, for Vimeo) from the host's oEmbed API. */
+  function parseVideo(s) {
+    if (!s) return null;
+    var yt = s.match(/(?:v=|\/shorts\/|youtu\.be\/|\/embed\/)([A-Za-z0-9_-]{11})/);
+    if (yt) return { type: "youtube", id: yt[1], url: "https://www.youtube.com/watch?v=" + yt[1] };
+    if (/^[A-Za-z0-9_-]{11}$/.test(s)) return { type: "youtube", id: s, url: "https://www.youtube.com/watch?v=" + s };
+    var vm = s.match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([0-9a-f]+))?/i);
+    if (vm) return { type: "vimeo", id: vm[1], hash: vm[2] || "", url: s };
+    return null;
+  }
+
+  function renderGrid(gridId, videos) {
+    var grid = document.getElementById(gridId);
+    var block = grid && grid.closest(".prod-block");
+    var items = videos.map(function (v) {
+      var parsed = parseVideo(v.url);
+      if (!parsed) return null;
+      parsed.title = v.title || "";
+      return parsed;
+    }).filter(Boolean);
+
+    if (!grid) return;
+    if (!items.length) { if (block) block.hidden = true; return; }
+
+    grid.classList.add("is-video");
+    grid.innerHTML = items.map(function (v, i) {
+      var tag = v.type === "youtube" ? "YouTube" : "Vimeo";
+      var thumb = v.type === "youtube" ? "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg" : "";
+      return '' +
+        '<a class="prod-card" data-video-index="' + i + '" href="' + v.url + '" target="_blank" rel="noopener noreferrer">' +
+          '<span class="prod-poster">' +
+            '<span class="prod-tag">' + tag + '</span>' +
+            '<img src="' + thumb + '" alt="" loading="lazy" width="480" height="360">' +
+            '<span class="prod-play" aria-hidden="true"><span>' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7Z" fill="currentColor"/></svg>' +
+            '</span></span>' +
+          '</span>' +
+          '<span class="prod-meta"><span class="prod-name">' + (v.title || "") + '</span></span>' +
+        '</a>';
+    }).join("");
+
+    var cards = grid.querySelectorAll(".prod-card");
+    items.forEach(function (v, i) {
+      if (v.title) return;
+      var oembedUrl = v.type === "vimeo"
+        ? "https://vimeo.com/api/oembed.json?url=" + encodeURIComponent(v.url)
+        : "https://www.youtube.com/oembed?format=json&url=" + encodeURIComponent(v.url);
+      fetch(oembedUrl).then(function (r) { return r.json(); }).then(function (data) {
+        var card = cards[i];
+        if (!card) return;
+        var img = card.querySelector(".prod-poster img");
+        var name = card.querySelector(".prod-name");
+        if (img && data.thumbnail_url) img.src = data.thumbnail_url;
+        if (name && data.title) name.textContent = data.title;
+      }).catch(function () { /* keep fallback blank poster/title */ });
+    });
+  }
+
+  renderGrid("prodVideoGrid", [
+    { url: "https://www.youtube.com/watch?v=mkAcX4Lw7Is", title: "Monopoly — Game Trailer" },
+    { url: "https://www.youtube.com/watch?v=WZcNJrDsmro", title: "Harry Potter: Hogwarts Mystery — Trailer" },
+    { url: "https://www.youtube.com/watch?v=ctE219hphqM", title: "Ueno Bank" },
+    { url: "https://vimeo.com/1198174095/dca68f7ad0", title: "" },
+    { url: "https://www.youtube.com/watch?v=02kCEurWkqU", title: "Horizon Worlds — Meta Quest 2" }
+  ]);
+
+  renderGrid("personalVideoGrid", [
+    { url: "https://youtu.be/9pNmvbWDMps", title: "" },
+    { url: "https://youtu.be/l2ePd8gcaF4", title: "" },
+    { url: "https://youtu.be/9QTnJ-ygUT0", title: "" },
+    { url: "https://youtu.be/a9HxD0a1lTA", title: "" },
+    { url: "https://youtu.be/0-aku5emD6o", title: "" }
+  ]);
+})();
+
+/* ---------- demo reel lightbox ---------- */
 (function () {
   var frame = document.getElementById('reelFrame');
   var bgVideo = document.getElementById('reelVideoBg');
