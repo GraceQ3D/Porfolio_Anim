@@ -49,14 +49,7 @@
   .section { position: relative; padding: clamp(64px, 9vw, 120px) clamp(24px, 6vw, 88px); border-top: 1px solid var(--line); overflow: hidden; }
   .section-head { display: flex; flex-direction: column; gap: 18px; margin-bottom: 56px; max-width: 1180px; margin-left: auto; margin-right: auto; }
   .section-title { font-size: clamp(30px, 4vw, 48px); margin: 0; text-wrap: balance; }
-  .num-bg {
-    position: absolute; top: -0.1em; right: clamp(12px, 4vw, 60px);
-    font-family: 'Instrument Serif', serif; font-style: italic;
-    font-size: clamp(90px, 13vw, 190px); color: transparent;
-    -webkit-text-stroke: 1px var(--line-strong); line-height: 1;
-    pointer-events: none; user-select: none; z-index: 0;
-  }
-  .section > *:not(.num-bg) { position: relative; z-index: 1; }
+  .section > * { position: relative; z-index: 1; }
 
   /* NAV */
   .nav {
@@ -284,6 +277,22 @@
   .footer-links { display: flex; flex-wrap: wrap; gap: 16px 40px; margin-bottom: 64px; }
   .footer-link .lbl { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--fg-faint); letter-spacing: 0.06em; text-transform: uppercase; display: block; margin-bottom: 6px; }
   .footer-link a { font-size: 17px; }
+  .contact-form { max-width: 640px; margin-bottom: 56px; display: flex; flex-direction: column; gap: 20px; }
+  .form-row { display: flex; flex-wrap: wrap; gap: 20px; }
+  .form-row .form-field { flex: 1 1 220px; }
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-field .lbl { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--fg-faint); letter-spacing: 0.06em; text-transform: uppercase; }
+  .form-field input, .form-field textarea {
+    background: var(--bg-soft); border: 1px solid var(--line); border-radius: 10px;
+    padding: 13px 16px; font-family: inherit; font-size: 15px; color: var(--fg); resize: vertical;
+  }
+  .form-field input:focus, .form-field textarea:focus { outline: none; border-color: var(--accent); }
+  .form-field input::placeholder, .form-field textarea::placeholder { color: var(--fg-faint); }
+  .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .contact-form .btn { border: none; cursor: pointer; }
+  .form-note { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--fg-faint); }
+  .form-status { font-family: 'Space Mono', monospace; font-size: 12px; }
+  .form-status.is-error { color: #e08585; }
   .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 28px; border-top: 1px solid var(--line); font-family: 'Space Mono', monospace; font-size: 12px; color: var(--fg-faint); }
   .footer-bottom a { color: var(--fg-faint); }
 
@@ -363,7 +372,6 @@
 <main>
 
   <section class="section" id="profile" data-view="home">
-    <span class="num-bg">01</span>
     <div class="section-head">
       <div class="eyebrow"><span class="dot"></span><span data-i18n="profile.eyebrow">01 — Profile</span></div>
       <h2 class="serif section-title" data-i18n-html="profile.title">Performance first,<br>craft always.</h2>
@@ -385,7 +393,6 @@
   </section>
 
   <section class="section" id="productions" data-view="productions">
-    <span class="num-bg">01</span>
     <div class="section-head">
       <div class="eyebrow"><span class="dot"></span><span data-i18n="prod.eyebrow">01 — Productions</span></div>
       <h2 class="serif section-title" data-i18n="prod.title">Selected productions.</h2>
@@ -461,7 +468,6 @@
   </section>
 
   <section class="section" id="reel" data-view="reel">
-    <span class="num-bg">01</span>
     <div class="section-head">
       <div class="eyebrow"><span class="dot"></span><span data-i18n="reel.eyebrow">01 — Demo Reel</span></div>
       <h2 class="serif section-title" data-i18n="reel.title">Demo reel.</h2>
@@ -474,7 +480,6 @@
   </section>
 
   <section class="section" id="personal" data-view="personal">
-    <span class="num-bg">01</span>
     <div class="section-head">
       <div class="eyebrow"><span class="dot"></span><span data-i18n="personal.eyebrow">01 — Personal Projects</span></div>
       <h2 class="serif section-title" data-i18n="personal.title">Personal projects.</h2>
@@ -485,7 +490,6 @@
   </section>
 
   <section class="section" id="experience" data-view="resume">
-    <span class="num-bg">01</span>
     <div class="section-head">
       <div class="eyebrow"><span class="dot"></span><span data-i18n="exp.eyebrow">01 — Experience</span></div>
       <h2 class="serif section-title" data-i18n="exp.title">Studio credits.</h2>
@@ -583,7 +587,6 @@
   </section>
 
   <section class="section" id="education" data-view="resume">
-    <span class="num-bg">02</span>
     <div class="section-head">
       <div class="eyebrow"><span class="dot"></span><span data-i18n="edu.eyebrow">02 — Education</span></div>
       <h2 class="serif section-title" data-i18n="edu.title">Training &amp; mentorship.</h2>
@@ -603,7 +606,6 @@
   </section>
 
   <section class="section" id="skills" data-view="resume">
-    <span class="num-bg">03</span>
     <div class="section-head">
       <div class="eyebrow"><span class="dot"></span><span data-i18n="skills.eyebrow">03 — Toolkit</span></div>
       <h2 class="serif section-title" data-i18n="skills.title">Software &amp; languages.</h2>
@@ -638,10 +640,34 @@
 </main>
 
 <footer class="footer" id="contact" data-view="home">
-  <span class="num-bg">02</span>
   <div class="footer-inner">
     <div class="eyebrow" style="margin-bottom:22px;"><span class="dot"></span><span data-i18n="footer.eyebrow">02 — Contact</span></div>
-    <h2 class="serif footer-title" data-i18n="footer.title">Let's bring your next character to life.</h2>
+    <h2 class="serif footer-title" data-i18n="footer.title">Let's talk.</h2>
+
+    <form class="contact-form" id="contactForm" novalidate>
+      <div class="form-row">
+        <label class="form-field">
+          <span class="lbl" data-i18n="footer.form.name">Name</span>
+          <input type="text" name="name" id="cfName" autocomplete="name" data-i18n-placeholder="footer.form.namePh" placeholder="Your name" required>
+        </label>
+        <label class="form-field">
+          <span class="lbl" data-i18n="footer.form.email">Email</span>
+          <input type="email" name="email" id="cfEmail" autocomplete="email" data-i18n-placeholder="footer.form.emailPh" placeholder="you@email.com" required>
+        </label>
+      </div>
+      <label class="form-field">
+        <span class="lbl" data-i18n="footer.form.message">Message (optional)</span>
+        <textarea name="message" id="cfMessage" rows="4" data-i18n-placeholder="footer.form.messagePh" placeholder="Tell me a bit about your project"></textarea>
+      </label>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 8-16 8V4Z" fill="currentColor"/></svg>
+          <span data-i18n="footer.form.submit">Send message</span>
+        </button>
+        <span class="form-note" data-i18n="footer.form.note">Opens your email app to send it straight to graceqiulo2@gmail.com.</span>
+      </div>
+    </form>
+
     <div class="footer-links">
       <div class="footer-link">
         <span class="lbl" data-i18n="footer.email">Email</span>
@@ -778,10 +804,18 @@
       "edu.card1.desc": "Specialization: Character & Creature Animation",
       "edu.card2.desc": "Mentorship with Yury Lementy",
       "footer.eyebrow": "02 — Contact",
-      "footer.title": "Let's bring your next character to life.",
+      "footer.title": "Let's talk.",
       "footer.email": "Email",
       "footer.phone": "Phone",
       "footer.linkedin": "LinkedIn",
+      "footer.form.name": "Name",
+      "footer.form.namePh": "Your name",
+      "footer.form.email": "Email",
+      "footer.form.emailPh": "you@email.com",
+      "footer.form.message": "Message (optional)",
+      "footer.form.messagePh": "Tell me a bit about your project",
+      "footer.form.submit": "Send message",
+      "footer.form.note": "Opens your email app to send it straight to graceqiulo2@gmail.com.",
       "footer.copyright": "© 2026 Grace Qiu Lo — 3D Character & Creature Animator",
       "footer.backToTop": "Back to top ↑",
       "lightbox.close": "Close reel"
@@ -863,10 +897,18 @@
       "edu.card1.desc": "Especialización: Animación de Personajes y Criaturas",
       "edu.card2.desc": "Mentoría con Yury Lementy",
       "footer.eyebrow": "02 — Contacto",
-      "footer.title": "Demos vida a tu próximo personaje.",
+      "footer.title": "Hablemos.",
       "footer.email": "Email",
       "footer.phone": "Teléfono",
       "footer.linkedin": "LinkedIn",
+      "footer.form.name": "Nombre",
+      "footer.form.namePh": "Tu nombre",
+      "footer.form.email": "Correo",
+      "footer.form.emailPh": "tu@correo.com",
+      "footer.form.message": "Mensaje (opcional)",
+      "footer.form.messagePh": "Cuéntame un poco sobre tu proyecto",
+      "footer.form.submit": "Enviar mensaje",
+      "footer.form.note": "Se abrirá tu app de correo para enviarlo directamente a graceqiulo2@gmail.com.",
       "footer.copyright": "© 2026 Grace Qiu Lo — Animadora de Personajes y Criaturas 3D",
       "footer.backToTop": "Volver arriba ↑",
       "lightbox.close": "Cerrar reel"
@@ -948,10 +990,18 @@
       "edu.card1.desc": "专业方向：角色与生物动画",
       "edu.card2.desc": "由 Yury Lementy 指导",
       "footer.eyebrow": "02 — 联系",
-      "footer.title": "让我们一起为你的下一个角色注入生命。",
+      "footer.title": "我们聊聊吧。",
       "footer.email": "邮箱",
       "footer.phone": "电话",
       "footer.linkedin": "领英",
+      "footer.form.name": "姓名",
+      "footer.form.namePh": "你的名字",
+      "footer.form.email": "邮箱",
+      "footer.form.emailPh": "you@email.com",
+      "footer.form.message": "留言（选填）",
+      "footer.form.messagePh": "简单介绍一下你的项目",
+      "footer.form.submit": "发送消息",
+      "footer.form.note": "将打开你的邮件应用，直接发送到 graceqiulo2@gmail.com。",
       "footer.copyright": "© 2026 Grace Qiu Lo — 三维角色与生物动画师",
       "footer.backToTop": "返回顶部 ↑",
       "lightbox.close": "关闭"
@@ -980,6 +1030,11 @@
       var k = el.getAttribute("data-i18n-aria");
       var v = dict[k] != null ? dict[k] : fallback[k];
       if (v != null) el.setAttribute("aria-label", v);
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n-placeholder");
+      var v = dict[k] != null ? dict[k] : fallback[k];
+      if (v != null) el.setAttribute("placeholder", v);
     });
 
     document.documentElement.lang = LANG_TAG[lang] || "en";
@@ -1080,7 +1135,8 @@
     { url: "https://youtu.be/l2ePd8gcaF4", title: "" },
     { url: "https://youtu.be/9QTnJ-ygUT0", title: "" },
     { url: "https://youtu.be/a9HxD0a1lTA", title: "" },
-    { url: "https://youtu.be/0-aku5emD6o", title: "" }
+    { url: "https://youtu.be/0-aku5emD6o", title: "" },
+    { url: "https://youtu.be/moJWj94Wo_U", title: "" }
   ]);
 })();
 
@@ -1115,6 +1171,28 @@
   lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeReel(); });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeReel();
+  });
+})();
+
+/* ---------- contact form (mailto) ---------- */
+(function () {
+  var TO = "graceqiulo2@gmail.com";
+  var form = document.getElementById("contactForm");
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = form.name.value.trim();
+    var email = form.email.value.trim();
+    var message = form.message.value.trim();
+
+    var subject = "Portfolio contact from " + name;
+    var body = "Name: " + name + "\nEmail: " + email + "\n\n" + message;
+    var mailtoUrl = "mailto:" + TO +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+
+    window.location.href = mailtoUrl;
   });
 })();
 </script>
