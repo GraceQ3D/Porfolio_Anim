@@ -161,6 +161,8 @@
   }
   .lightbox.is-open { opacity: 1; pointer-events: auto; }
   .lightbox-video { max-width: 100%; max-height: 88vh; border-radius: 10px; box-shadow: 0 40px 100px -20px oklch(0 0 0 / 70%); }
+  .lightbox-embed { position: relative; width: min(100%, 1100px); aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; box-shadow: 0 40px 100px -20px oklch(0 0 0 / 70%); background: #000; }
+  .lightbox-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .lightbox-close {
     position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
     border: 1px solid var(--line-strong); background: color-mix(in oklch, var(--bg) 70%, transparent); color: var(--fg);
@@ -291,7 +293,7 @@
   .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
   .contact-form .btn { border: none; cursor: pointer; }
   .form-note { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--fg-faint); }
-  .form-status { font-family: 'Space Mono', monospace; font-size: 12px; }
+  .form-status { font-family: 'Space Mono', monospace; font-size: 12px; margin: 0; color: var(--accent); }
   .form-status.is-error { color: #e08585; }
   .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 28px; border-top: 1px solid var(--line); font-family: 'Space Mono', monospace; font-size: 12px; color: var(--fg-faint); }
   .footer-bottom a { color: var(--fg-faint); }
@@ -339,7 +341,7 @@
         <div class="eyebrow"><span class="dot"></span><span data-i18n="hero.eyebrow">PORTFOLIO — 3D CHARACTER ANIMATION</span></div>
         <h1 class="serif hero-name">Grace Qiu Lo</h1>
         <p class="hero-role" data-i18n="hero.role">3D Character &amp; Creature Animator</p>
-        <p class="hero-tagline" data-i18n="hero.tagline">Character animator with production experience across feature films, episodic animation, game cinematics and commercial content — full shot ownership from blocking to final polish, with a strong focus on performance-driven acting.</p>
+        <p class="hero-tagline" data-i18n="hero.tagline">Character animator with years of production experience — I adapt quickly to any pipeline or visual style, pairing a solid technical foundation with a creative eye to bring characters to life with a personality all their own.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#resume">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7Z" fill="currentColor"/></svg>
@@ -381,7 +383,7 @@
         FEATURE FILM<br>EPISODIC TV<br>GAME CINEMATICS<br>COMMERCIAL<br>AR / REAL-TIME
       </div>
       <div>
-        <p class="profile-text" data-i18n="profile.p1">Character animator with production experience across feature films, episodic animation, game cinematics, and commercial content. Strong focus on performance-driven animation, shot ownership from blocking to polish, and high-quality character acting.</p>
+        <p class="profile-text" data-i18n="profile.p1">Character animator with production experience across feature films, episodic animation, game cinematics, and commercial content. Focused on telling story through movement — grounding every shot in intention and emotion, with full ownership from blocking to final polish.</p>
         <p class="profile-text" data-i18n="profile.p2">Experienced in keyframe animation and mocap cleanup workflows within fast-paced international production pipelines — with strong adaptability to different studio standards and workflows.</p>
         <div class="stat-row">
           <div class="stat"><b>16</b><span data-i18n="profile.stat1">Productions Shipped</span></div>
@@ -666,6 +668,7 @@
         </button>
         <span class="form-note" data-i18n="footer.form.note">Opens your email app to send it straight to graceqiulo2@gmail.com.</span>
       </div>
+      <p class="form-status" id="cfStatus" role="status" aria-live="polite" hidden data-i18n="footer.form.sent">Message ready — check your email app to hit send.</p>
     </form>
 
     <div class="footer-links">
@@ -694,6 +697,15 @@
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
   </button>
   <video class="lightbox-video" id="lightboxVideo" src="assets/demoreel.mp4" controls playsinline></video>
+</div>
+
+<div class="lightbox" id="videoLightbox" aria-hidden="true">
+  <button class="lightbox-close" id="videoLightboxClose" type="button" data-i18n-aria="lightbox.close" aria-label="Close video">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <div class="lightbox-embed">
+    <iframe id="videoLightboxFrame" src="" title="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+  </div>
 </div>
 
 <script>
@@ -747,7 +759,7 @@
       "prod.trailers": "Trailers & spots",
       "hero.eyebrow": "PORTFOLIO — 3D CHARACTER ANIMATION",
       "hero.role": "3D Character & Creature Animator",
-      "hero.tagline": "Character animator with production experience across feature films, episodic animation, game cinematics and commercial content — full shot ownership from blocking to final polish, with a strong focus on performance-driven acting.",
+      "hero.tagline": "Character animator with years of production experience — I adapt quickly to any pipeline or visual style, pairing a solid technical foundation with a creative eye to bring characters to life with a personality all their own.",
       "hero.viewResume": "View Resume",
       "hero.getInTouch": "Get in Touch",
       "hero.location": "Barcelona, Spain",
@@ -756,7 +768,7 @@
       "profile.eyebrow": "01 — Profile",
       "profile.title": "Performance first,<br>craft always.",
       "profile.categories": "FEATURE FILM<br>EPISODIC TV<br>GAME CINEMATICS<br>COMMERCIAL<br>AR / REAL-TIME",
-      "profile.p1": "Character animator with production experience across feature films, episodic animation, game cinematics, and commercial content. Strong focus on performance-driven animation, shot ownership from blocking to polish, and high-quality character acting.",
+      "profile.p1": "Character animator with production experience across feature films, episodic animation, game cinematics, and commercial content. Focused on telling story through movement — grounding every shot in intention and emotion, with full ownership from blocking to final polish.",
       "profile.p2": "Experienced in keyframe animation and mocap cleanup workflows within fast-paced international production pipelines — with strong adaptability to different studio standards and workflows.",
       "profile.stat1": "Productions Shipped",
       "profile.stat2": "Studios & Teams",
@@ -816,6 +828,7 @@
       "footer.form.messagePh": "Tell me a bit about your project",
       "footer.form.submit": "Send message",
       "footer.form.note": "Opens your email app to send it straight to graceqiulo2@gmail.com.",
+      "footer.form.sent": "Message ready — check your email app to hit send.",
       "footer.copyright": "© 2026 Grace Qiu Lo — 3D Character & Creature Animator",
       "footer.backToTop": "Back to top ↑",
       "lightbox.close": "Close reel"
@@ -840,7 +853,7 @@
       "prod.trailers": "Tráileres y spots",
       "hero.eyebrow": "PORTFOLIO — ANIMACIÓN DE PERSONAJES 3D",
       "hero.role": "Animadora de Personajes y Criaturas 3D",
-      "hero.tagline": "Animadora de personajes con experiencia en producción en largometrajes, series de animación, cinemáticas de videojuegos y contenido publicitario — responsabilidad completa del plano, del blocking al pulido final, con un fuerte enfoque en la interpretación actoral.",
+      "hero.tagline": "Animadora de personajes con años de experiencia en producción — me adapto con rapidez a cualquier pipeline o estilo visual, combinando una base técnica sólida con un ojo creativo para dar vida a personajes con carácter propio.",
       "hero.viewResume": "Ver currículum",
       "hero.getInTouch": "Contactar",
       "hero.location": "Barcelona, España",
@@ -849,7 +862,7 @@
       "profile.eyebrow": "01 — Perfil",
       "profile.title": "La interpretación primero,<br>el oficio siempre.",
       "profile.categories": "LARGOMETRAJE<br>SERIES DE TV<br>CINEMÁTICAS DE JUEGOS<br>PUBLICIDAD<br>AR / TIEMPO REAL",
-      "profile.p1": "Animadora de personajes con experiencia en producción en largometrajes, series de animación, cinemáticas de videojuegos y contenido publicitario. Fuerte enfoque en la animación basada en la interpretación, responsabilidad del plano del blocking al pulido y actuación de personajes de alta calidad.",
+      "profile.p1": "Animadora de personajes con experiencia en producción en largometrajes, series de animación, cinemáticas de videojuegos y contenido publicitario. Centrada en contar historias a través del movimiento — dotando cada plano de intención y emoción, con responsabilidad completa del blocking al pulido final.",
       "profile.p2": "Con experiencia en animación por keyframe y flujos de limpieza de captura de movimiento en pipelines de producción internacionales de ritmo rápido, con gran capacidad de adaptación a distintos estándares y flujos de trabajo de cada estudio.",
       "profile.stat1": "Producciones entregadas",
       "profile.stat2": "Estudios y equipos",
@@ -909,6 +922,7 @@
       "footer.form.messagePh": "Cuéntame un poco sobre tu proyecto",
       "footer.form.submit": "Enviar mensaje",
       "footer.form.note": "Se abrirá tu app de correo para enviarlo directamente a graceqiulo2@gmail.com.",
+      "footer.form.sent": "Mensaje listo — revisa tu app de correo para darle a enviar.",
       "footer.copyright": "© 2026 Grace Qiu Lo — Animadora de Personajes y Criaturas 3D",
       "footer.backToTop": "Volver arriba ↑",
       "lightbox.close": "Cerrar reel"
@@ -933,7 +947,7 @@
       "prod.trailers": "预告片与广告",
       "hero.eyebrow": "作品集 — 三维角色动画",
       "hero.role": "三维角色与生物动画师",
-      "hero.tagline": "角色动画师，拥有长片电影、剧集动画、游戏过场动画及商业内容的制作经验——从 blocking 到最终精修全程负责镜头，尤其注重表演驱动的演技。",
+      "hero.tagline": "拥有多年制作经验的角色动画师——能够快速适应各种 pipeline 和视觉风格，将扎实的技术功底与富有创意的视角相结合，赋予角色独特的个性与生命力。",
       "hero.viewResume": "查看简历",
       "hero.getInTouch": "取得联系",
       "hero.location": "西班牙，巴塞罗那",
@@ -942,7 +956,7 @@
       "profile.eyebrow": "01 — 简介",
       "profile.title": "表演至上，<br>技艺永恒。",
       "profile.categories": "长片电影<br>电视剧集<br>游戏过场动画<br>广告<br>AR / 实时",
-      "profile.p1": "角色动画师，拥有长片电影、剧集动画、游戏过场动画及商业内容的制作经验。专注于表演驱动的动画、从 blocking 到精修的镜头负责制，以及高质量的角色演技。",
+      "profile.p1": "角色动画师，拥有长片电影、剧集动画、游戏过场动画及商业内容的制作经验。专注于用动作讲故事——赋予每个镜头明确的意图与情感，从 blocking 到最终精修全程负责。",
       "profile.p2": "熟悉关键帧动画与动作捕捉清理流程，能够在快节奏的国际制作管线中工作——对不同工作室的标准与流程具有很强的适应能力。",
       "profile.stat1": "已交付作品",
       "profile.stat2": "工作室与团队",
@@ -1002,6 +1016,7 @@
       "footer.form.messagePh": "简单介绍一下你的项目",
       "footer.form.submit": "发送消息",
       "footer.form.note": "将打开你的邮件应用，直接发送到 graceqiulo2@gmail.com。",
+      "footer.form.sent": "消息已就绪——请在你的邮件应用中点击发送。",
       "footer.copyright": "© 2026 Grace Qiu Lo — 三维角色与生物动画师",
       "footer.backToTop": "返回顶部 ↑",
       "lightbox.close": "关闭"
@@ -1075,7 +1090,8 @@
     return null;
   }
 
-  function renderGrid(gridId, videos) {
+  function renderGrid(gridId, videos, opts) {
+    opts = opts || {};
     var grid = document.getElementById(gridId);
     var block = grid && grid.closest(".prod-block");
     var items = videos.map(function (v) {
@@ -1093,7 +1109,7 @@
       var tag = v.type === "youtube" ? "YouTube" : "Vimeo";
       var thumb = v.type === "youtube" ? "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg" : "";
       return '' +
-        '<a class="prod-card" data-video-index="' + i + '" href="' + v.url + '" target="_blank" rel="noopener noreferrer">' +
+        '<a class="prod-card" data-video-index="' + i + '" data-video-type="' + v.type + '" data-video-id="' + v.id + '" data-video-hash="' + (v.hash || '') + '" href="' + v.url + '" target="_blank" rel="noopener noreferrer">' +
           '<span class="prod-poster">' +
             '<span class="prod-tag">' + tag + '</span>' +
             '<img src="' + thumb + '" alt="" loading="lazy" width="480" height="360">' +
@@ -1120,6 +1136,16 @@
         if (name && data.title) name.textContent = data.title;
       }).catch(function () { /* keep fallback blank poster/title */ });
     });
+
+    if (opts.inline) {
+      cards.forEach(function (card) {
+        card.addEventListener("click", function (e) {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+          e.preventDefault();
+          window.openVideoLightbox(card.getAttribute("data-video-type"), card.getAttribute("data-video-id"), card.getAttribute("data-video-hash"));
+        });
+      });
+    }
   }
 
   renderGrid("prodVideoGrid", [
@@ -1128,7 +1154,7 @@
     { url: "https://www.youtube.com/watch?v=ctE219hphqM", title: "Ueno Bank" },
     { url: "https://vimeo.com/1198174095/dca68f7ad0", title: "" },
     { url: "https://www.youtube.com/watch?v=02kCEurWkqU", title: "Horizon Worlds — Meta Quest 2" }
-  ]);
+  ], { inline: true });
 
   renderGrid("personalVideoGrid", [
     { url: "https://youtu.be/9pNmvbWDMps", title: "" },
@@ -1137,7 +1163,7 @@
     { url: "https://youtu.be/a9HxD0a1lTA", title: "" },
     { url: "https://youtu.be/0-aku5emD6o", title: "" },
     { url: "https://youtu.be/moJWj94Wo_U", title: "" }
-  ]);
+  ], { inline: true });
 })();
 
 /* ---------- demo reel lightbox ---------- */
@@ -1174,17 +1200,54 @@
   });
 })();
 
+/* ---------- inline video lightbox (YouTube / Vimeo embeds) ---------- */
+(function () {
+  var lightbox = document.getElementById('videoLightbox');
+  var frame = document.getElementById('videoLightboxFrame');
+  var closeBtn = document.getElementById('videoLightboxClose');
+  if (!lightbox || !frame || !closeBtn) return;
+
+  function openVideoLightbox(type, id, hash) {
+    var src = type === 'vimeo'
+      ? 'https://player.vimeo.com/video/' + id + (hash ? '?h=' + hash : '?') + '&autoplay=1&title=0&byline=0&portrait=0'
+      : 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
+    frame.src = src;
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeVideoLightbox() {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    frame.src = '';
+  }
+  window.openVideoLightbox = openVideoLightbox;
+
+  closeBtn.addEventListener('click', closeVideoLightbox);
+  lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeVideoLightbox(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeVideoLightbox();
+  });
+})();
+
 /* ---------- contact form (mailto) ---------- */
 (function () {
   var TO = "graceqiulo2@gmail.com";
   var form = document.getElementById("contactForm");
   if (!form) return;
+  var status = document.getElementById("cfStatus");
+  var nameField = document.getElementById("cfName");
+  var emailField = document.getElementById("cfEmail");
+  var messageField = document.getElementById("cfMessage");
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    var name = form.name.value.trim();
-    var email = form.email.value.trim();
-    var message = form.message.value.trim();
+    if (!form.reportValidity()) return;
+
+    var name = nameField.value.trim();
+    var email = emailField.value.trim();
+    var message = messageField.value.trim();
 
     var subject = "Portfolio contact from " + name;
     var body = "Name: " + name + "\nEmail: " + email + "\n\n" + message;
@@ -1193,6 +1256,11 @@
       "&body=" + encodeURIComponent(body);
 
     window.location.href = mailtoUrl;
+
+    if (status) {
+      status.classList.remove("is-error");
+      status.hidden = false;
+    }
   });
 })();
 </script>
